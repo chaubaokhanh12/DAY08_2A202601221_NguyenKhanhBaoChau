@@ -129,7 +129,7 @@ def _vector_search(query_text: str, top_k: int = 10) -> list[dict]:
     actual_top_k = min(top_k, collection.count())
 
     results = collection.query(
-        query_embeddings=[query_vector],
+        query_embeddings=query_vector,
         n_results=actual_top_k,
         include=["documents", "metadatas", "distances"],
     )
