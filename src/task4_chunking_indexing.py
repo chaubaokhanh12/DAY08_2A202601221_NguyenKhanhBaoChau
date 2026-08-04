@@ -23,7 +23,9 @@ Vector store options:
     - FAISS (chỉ dense search)
 
 Cài đặt:
-    pip install langchain-text-splitters sentence-transformers chromadb
+    pip install langchain-text-splitters openai python-dotenv chromadb
+    # text-embedding-3-small là API model — không cần sentence-transformers.
+    # Cần OPENAI_API_KEY trong file .env (đã có sẵn).
 
 Lưu ý quan trọng: nếu sau này đổi corpus (đổi chủ đề, thêm/bớt tài liệu), phải XÓA
 chroma_db/ cũ trước khi reindex — nếu không, chunk cũ và mới sẽ tồn tại lẫn lộn
@@ -31,6 +33,10 @@ trong cùng collection, retrieval sẽ trả về kết quả rác từ dữ li�
 """
 
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()  # nạp OPENAI_API_KEY từ .env
 
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
 CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
@@ -49,22 +55,24 @@ CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
 CHUNK_SIZE = 500        # Vì sao chọn 500? Đủ lớn để giữ ngữ cảnh hoàn chỉnh cho
                         # 1 đoạn thông tin (VD: 1 điều khoản học phí), nhưng đủ nhỏ
                         # để embedding model capture được semantic meaning chính xác.
-                        # bge-m3 hỗ trợ tối đa 8192 tokens nhưng chunk nhỏ hơn cho
-                        # retrieval chính xác hơn.
+                        # text-embedding-3-small hỗ trợ tối đa 8191 tokens, nhưng chunk
+                        # nhỏ hơn cho retrieval chính xác hơn.
 CHUNK_OVERLAP = 50      # Vì sao chọn 50? ~10% overlap giúp tránh mất ngữ cảnh tại
                         # ranh giới chunk, đặc biệt khi câu bị cắt giữa chừng.
                         # Không quá lớn để tránh trùng lặp quá nhiều trong index.
 CHUNKING_METHOD = "recursive"  # "recursive" | "markdown_header" | "semantic"
 
-# Embedding model: BAAI/bge-m3
-# Vì sao chọn BAAI/bge-m3:
-#   - Multilingual: hỗ trợ tốt cả tiếng Việt lẫn tiếng Anh — phù hợp cho corpus
-#     University Services có cả nội dung tiếng Việt và thuật ngữ tiếng Anh
-#   - 1024 dimensions: cân bằng giữa chất lượng embedding và kích thước lưu trữ
-#   - State-of-the-art trên MTEB benchmark cho multilingual tasks
-#   - Hỗ trợ dense, sparse và ColBERT retrieval trong cùng 1 model
-EMBEDDING_MODEL = "BAAI/bge-m3"  # Mặc định: multilingual, tốt cho tiếng Việt lẫn tiếng Anh
-EMBEDDING_DIM = 1024
+# Embedding model: OpenAI text-embedding-3-small
+# Vì sao chọn text-embedding-3-small:
+#   - API model (không cần tải weights về local): nhanh, nhẹ, không tốn RAM/GPU
+#   - 1536 dimensions: chất lượng retrieval tốt, cân bằng với kích thước lưu trữ
+#   - Hỗ trợ tốt multilingual (tiếng Việt + tiếng Anh) — đủ cho corpus University
+#     Services có cả nội dung tiếng Việt và thuật ngữ tiếng Anh
+#   - State-of-the-art trên MTEB benchmark cho embedding kích thước nhỏ giá rẻ
+#   - Cần OPENAI_API_KEY trong .env (đã cấu hình sẵn)
+EMBEDDING_MODEL = "text-embedding-3-small"  # OpenAI API embedding
+EMBEDDING_DIM = 1536
+OPENAI_EMBED_BATCH = 64  # Số input/request — an toàn dưới giới hạn 2048 của API
 
 # Vector store: ChromaDB
 # Vì sao chọn ChromaDB:
@@ -85,14 +93,80 @@ _chroma_collection = None
 
 def get_embedding_model():
     """
-    Lấy (hoặc khởi tạo) SentenceTransformer model.
-    Singleton pattern để tránh load model nhiều lần trong cùng process.
+    Lấy (hoặc khởi tạo) OpenAI embedding client.
+
+    Trả về một wrapper có phương thức `.encode(texts, show_progress_bar=...,
+    normalize_embeddings=...)` tương thích giao diện SentenceTransformer,
+    để code downstream (Task 5 semantic search) không cần sửa khi đổi model.
+
+    Singleton pattern để tránh khởi tạo client nhiều lần trong cùng process.
     """
     global _embedding_model
     if _embedding_model is None:
-        from sentence_transformers import SentenceTransformer
-        _embedding_model = SentenceTransformer(EMBEDDING_MODEL)
+        _embedding_model = _OpenAIEmbedder(
+            model=EMBEDDING_MODEL,
+            dim=EMBEDDING_DIM,
+            batch_size=OPENAI_EMBED_BATCH,
+        )
     return _embedding_model
+
+
+class _OpenAIEmbedder:
+    """Wrapper quanh OpenAI Embeddings API, tương thích `.encode()` của
+    SentenceTransformer để dễ hoán đổi model mà không phải sửa code caller.
+
+    `.encode(texts, normalize_embeddings=True)` trả về numpy.ndarray shape
+    (n, dim) — cùng kiểu trả về của SentenceTransformer, dtype float32.
+    """
+
+    def __init__(self, model: str, dim: int, batch_size: int = 64):
+        import os
+        from openai import OpenAI
+
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "OPENAI_API_KEY chưa được cấu hình. Hãy tạo file .env với "
+                "OPENAI_API_KEY=sk-... (xem .env.example)."
+            )
+        self.model = model
+        self.dim = dim
+        self.batch_size = batch_size
+        self._client = OpenAI(api_key=api_key)
+
+    def encode(
+        self,
+        texts,
+        show_progress_bar: bool = False,
+        normalize_embeddings: bool = True,
+        **_unused,
+    ):
+        import numpy as np
+
+        single = isinstance(texts, str)
+        if single:
+            texts = [texts]
+
+        all_vecs = []
+        total = len(texts)
+        for start in range(0, total, self.batch_size):
+            batch = texts[start:start + self.batch_size]
+            resp = self._client.embeddings.create(model=self.model, input=batch)
+            # API trả về list đã sắp xếp theo index, nhưng sort để an toàn.
+            for item in sorted(resp.data, key=lambda d: d.index):
+                all_vecs.append(item.embedding)
+            if show_progress_bar:
+                done = min(start + self.batch_size, total)
+                print(f"    embedded {done}/{total}", end="\r", flush=True)
+        if show_progress_bar:
+            print()
+
+        vecs = np.asarray(all_vecs, dtype=np.float32)
+        if normalize_embeddings:
+            norms = np.linalg.norm(vecs, axis=1, keepdims=True)
+            norms[norms == 0] = 1.0  # tránh chia 0
+            vecs = vecs / norms
+        return vecs
 
 
 def get_collection():
@@ -170,10 +244,11 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
     """
-    Embed toàn bộ chunks bằng BAAI/bge-m3.
+    Embed toàn bộ chunks bằng OpenAI text-embedding-3-small.
 
-    BAAI/bge-m3 tạo dense embeddings 1024 chiều, tối ưu cho multilingual
-    semantic search. Model hỗ trợ tối đa 8192 tokens per input.
+    text-embedding-3-small tạo dense embeddings 1536 chiều, tối ưu cho
+    semantic search multilingual. Embed qua API theo batch (64 input/request),
+    L2-normalize để cosine similarity trong ChromaDB cho kết quả nhất quán.
 
     Returns:
         Mỗi chunk dict được thêm key 'embedding': list[float]
