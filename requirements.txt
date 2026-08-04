@@ -1,37 +1,38 @@
 # Core
-python-dotenv>=1.0.0
-requests>=2.31.0
-numpy>=1.24.0
+python-dotenv
+requests
+numpy
 
 # Task 2 - Crawling
-crawl4ai>=0.3.0
+crawl4ai
 
 # Task 3 - Document conversion
-markitdown[pdf]>=0.1.0
-fpdf2>=2.7.0
+markitdown[pdf]
+fpdf2
 
 # Task 4 - Chunking & Indexing
-langchain-text-splitters>=0.2.0
-sentence-transformers>=2.2.0
-chromadb>=0.5.0
+langchain-text-splitters
+sentence-transformers
+chromadb
 
 # Task 6 - BM25 + TF-IDF
-rank-bm25>=0.2.2
-scikit-learn>=1.3.0
+rank-bm25
+scikit-learn
 
 # Task 8 - PageIndex
-pageindex>=0.1.0
+pageindex
 
 # Task 10 - Generation
-openai>=1.30.0
+openai
 
 # Group project - UI
-streamlit>=1.35.0
+streamlit
 
 # Group project - Evaluation
-ragas==0.1.21
-datasets>=2.14.0
-langchain-openai>=0.1.0
+ragas
+datasets
+langchain-openai
 
 # Testing (dung de cham diem bai ca nhan)
-pytest>=7.0.0
+pytest
+elasticsearch>=8.0.0
