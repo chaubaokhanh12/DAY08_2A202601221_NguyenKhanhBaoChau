@@ -35,3 +35,4 @@ langchain-openai
 
 # Testing (dung de cham diem bai ca nhan)
 pytest
+elasticsearch>=8.0.0
