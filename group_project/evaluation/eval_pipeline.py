@@ -378,6 +378,34 @@ def export_results(ragas_results: dict | None, ab_results: dict, mode: str):
                  "Metric LLM-judge cần `EVAL_MODEL` + API key thật (xem cuối file).\n")
     lines.append("---\n")
 
+    # ---- Key Findings (tự suy luận từ số liệu) ----
+    lines.append("## Key Findings\n")
+    avgA, avgB = _avg(oA), _avg(oB)
+    if avgA is not None and avgB is not None:
+        winner = "Config A (hybrid + rerank)" if avgA >= avgB else "Config B (dense-only)"
+        lines.append(f"- **Config thắng cuộc:** {winner} (avg {_fmt(max(avgA,avgB))} vs "
+                     f"{_fmt(min(avgA,avgB))}, Δ={_fmt(abs(avgA-avgB))}).")
+    # metric có chênh lệch A-B lớn nhất
+    deltas = {m: (oA.get(m) - oB.get(m)) for m in METRICS if oA.get(m) is not None and oB.get(m) is not None}
+    if deltas:
+        biggest = max(deltas, key=lambda m: abs(deltas[m]))
+        lines.append(f"- **Metric chênh lệch nhất:** `{biggest}` (Δ={_fmt(deltas[biggest])}) — "
+                     f"{'hybrid+rerank vượt' if deltas[biggest] > 0 else 'dense-only vượt'}.")
+    # câu bị 0 faithfulness (retrieval fail hoàn toàn)
+    perA = cfgA.get("per_question", []) or []
+    zero_faith = [r for r in perA if (r.get("faithfulness") or 0) == 0.0]
+    if zero_faith:
+        ids = ", ".join(r.get("id", "?") for r in zero_faith)
+        lines.append(f"- **{len(zero_faith)} câu faithfulness=0** ({ids}): retrieval không đưa được "
+                     "chunk đúng vào context → LLM không có cơ sở trả lời.")
+    # recall OK nhưng faith thấp (generation gap)
+    gen_gap = [r for r in perA if (r.get("context_recall") or 0) >= 0.5 and (r.get("faithfulness") or 1) < 0.5]
+    if gen_gap:
+        ids = ", ".join(r.get("id", "?") for r in gen_gap)
+        lines.append(f"- **Recall≥0.5 nhưng faithfulness<0.5** ({ids}): chunk đúng đã lấy về nhưng "
+                     "LLM không dùng hết → vấn đề ở generation (reorder/prompt).")
+    lines.append("---\n")
+
     # ---- A/B Analysis ----
     lines.append("## A/B Comparison Analysis\n")
     lines.append("**Config A — hybrid search + RRF rerank:**")

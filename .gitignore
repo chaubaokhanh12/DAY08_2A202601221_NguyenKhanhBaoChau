@@ -6,11 +6,15 @@ __pycache__/
 venv/
 *.egg-info/
 
-# Env (keys)
+# Env (keys) — KHÔNG bao giờ commit .env (chứa API key thật)
 .env
 
 # Temp PDF conversion cache
 data/_tmp_pdf/
+
+# Generated RAG artifacts (tái tạo được qua task3 + task4)
+chroma_db/
+_pdf_txt/
 
 # Temp / cache
 .pytest_cache/
