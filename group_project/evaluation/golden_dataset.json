@@ -1,17 +1,102 @@
 [
   {
     "question": "Học phí hàng năm của chương trình Business tại RMIT Vietnam là bao nhiêu?",
-    "expected_answer": "Khoảng 375.840.000 VND mỗi năm (tùy chương trình cụ thể).",
-    "expected_context": "Trang Tuition Fees, mục Undergraduate Programs"
+    "expected_answer": "Học phí chương trình cử nhân Business tại RMIT Vietnam khoảng 375.840.000 VND mỗi năm, tùy theo chương trình cụ thể và năm nhập học.",
+    "expected_context": "Trang Tuition Fees, mục Undergraduate Programs — Business"
   },
   {
     "question": "Học phí được thanh toán theo hình thức nào?",
-    "expected_answer": "Thanh toán theo từng học kỳ, tính theo từng môn học đã đăng ký.",
+    "expected_answer": "Học phí được thanh toán theo từng học kỳ. Sinh viên đóng phí dựa trên số môn học đã đăng ký trong kỳ đó. Hỗ trợ thanh toán qua chuyển khoản ngân hàng.",
     "expected_context": "Trang Tuition Fees, mục Payment Structure"
   },
   {
     "question": "Trường có cung cấp ký túc xá trong khuôn viên không?",
-    "expected_answer": "Không — trường không cung cấp chỗ ở trong khuôn viên, nhưng có đội ngũ hỗ trợ sinh viên tìm chỗ ở gần trường.",
+    "expected_answer": "RMIT Vietnam không cung cấp chỗ ở trong khuôn viên trường, nhưng có đội ngũ Accommodation Services hỗ trợ sinh viên tìm chỗ ở phù hợp gần campus.",
     "expected_context": "Trang Accommodation Services"
+  },
+  {
+    "question": "Điều kiện để xin học bổng Academic Achievement Scholarship tại RMIT là gì?",
+    "expected_answer": "Sinh viên cần đạt GPA tối thiểu theo yêu cầu, có thành tích học tập xuất sắc, và nộp đơn đúng thời hạn. Mức học bổng có thể lên tới 100% học phí tùy theo đánh giá.",
+    "expected_context": "Trang Scholarships, mục Academic Achievement Scholarship"
+  },
+  {
+    "question": "Sinh viên quốc tế có những loại học bổng nào tại RMIT Vietnam?",
+    "expected_answer": "RMIT Vietnam cung cấp nhiều loại học bổng cho sinh viên quốc tế bao gồm: Academic Achievement Scholarship, RMIT Vietnam Excellence Scholarship, và các học bổng theo chương trình đối tác.",
+    "expected_context": "Trang Scholarships, mục International Students"
+  },
+  {
+    "question": "Làm sao để đặt phòng học nhóm ở thư viện RMIT?",
+    "expected_answer": "Sinh viên có thể đặt phòng học nhóm (study room) tại thư viện thông qua hệ thống đặt phòng online trên trang web thư viện hoặc ứng dụng của trường.",
+    "expected_context": "Trang Library Services, mục Study Room Booking"
+  },
+  {
+    "question": "Thư viện RMIT mở cửa vào những giờ nào?",
+    "expected_answer": "Thư viện RMIT thường mở cửa từ thứ Hai đến thứ Sáu, với giờ mở cửa kéo dài để phục vụ sinh viên. Giờ mở cửa cụ thể có thể thay đổi theo từng campus và mùa thi.",
+    "expected_context": "Trang Library Services, mục Opening Hours"
+  },
+  {
+    "question": "Cách đăng ký học phần qua myRMIT như thế nào?",
+    "expected_answer": "Sinh viên đăng nhập vào cổng myRMIT, chọn mục Course Registration/Enrolment, tìm và chọn các môn học phù hợp với chương trình đào tạo, sau đó xác nhận đăng ký trước thời hạn quy định.",
+    "expected_context": "Trang Course Registration Portal"
+  },
+  {
+    "question": "Thời hạn đăng ký học phần cho học kỳ tới là khi nào?",
+    "expected_answer": "Thời hạn đăng ký học phần được công bố trên cổng myRMIT và trang Academic Calendar. Sinh viên cần đăng ký trước ngày deadline để đảm bảo chỗ trong lớp học.",
+    "expected_context": "Trang Academic Calendar, mục Important Dates"
+  },
+  {
+    "question": "RMIT Vietnam có những chương trình hỗ trợ sức khỏe tinh thần nào cho sinh viên?",
+    "expected_answer": "RMIT Vietnam cung cấp dịch vụ tư vấn tâm lý (counselling services) cho sinh viên, bao gồm tư vấn cá nhân, workshop về sức khỏe tinh thần, và các chương trình hỗ trợ wellbeing.",
+    "expected_context": "Trang Student Support Services, mục Counselling"
+  },
+  {
+    "question": "Dịch vụ hỗ trợ chỗ ở cho sinh viên hoạt động như thế nào?",
+    "expected_answer": "Đội ngũ Accommodation Services của RMIT hỗ trợ sinh viên tìm chỗ ở phù hợp gần campus, bao gồm tư vấn về khu vực, giá cả, và kết nối với các đơn vị cho thuê uy tín.",
+    "expected_context": "Trang Accommodation Services, mục How We Help"
+  },
+  {
+    "question": "Sinh viên có thể mượn bao nhiêu tài liệu cùng lúc từ thư viện?",
+    "expected_answer": "Số lượng tài liệu mượn cùng lúc phụ thuộc vào loại tài khoản sinh viên. Thông tin chi tiết về hạn mức mượn sách được quy định trên trang thư viện.",
+    "expected_context": "Trang Library Services, mục Borrowing Policy"
+  },
+  {
+    "question": "Có những sự kiện nào dành cho sinh viên mới nhập học?",
+    "expected_answer": "RMIT tổ chức các chương trình Orientation Week cho sinh viên mới, bao gồm tour campus, giới thiệu dịch vụ, hướng dẫn đăng ký học phần, và các hoạt động giao lưu.",
+    "expected_context": "Trang Student Events, mục Orientation"
+  },
+  {
+    "question": "Chính sách hoàn học phí khi rút môn trễ tại RMIT Vietnam là gì?",
+    "expected_answer": "Chính sách hoàn học phí phụ thuộc vào thời điểm rút môn. Rút môn trước deadline không bị phạt, rút môn sau deadline có thể bị trừ một phần hoặc toàn bộ học phí tùy theo quy định từng kỳ.",
+    "expected_context": "Trang Tuition Fees, mục Refund Policy"
+  },
+  {
+    "question": "RMIT Vietnam có hỗ trợ tài chính dạng trả góp học phí không?",
+    "expected_answer": "RMIT Vietnam có chương trình hỗ trợ tài chính và phương thức thanh toán linh hoạt. Sinh viên có thể liên hệ phòng tài chính để tìm hiểu về các phương thức thanh toán phù hợp.",
+    "expected_context": "Trang Tuition Fees, mục Financial Assistance"
+  },
+  {
+    "question": "Thư viện RMIT có cung cấp quyền truy cập cơ sở dữ liệu học thuật trực tuyến không?",
+    "expected_answer": "Có, thư viện RMIT cung cấp quyền truy cập nhiều cơ sở dữ liệu học thuật trực tuyến như JSTOR, Scopus, Web of Science, IEEE Xplore và nhiều nguồn tài liệu điện tử khác cho sinh viên.",
+    "expected_context": "Trang Library Services, mục Online Databases"
+  },
+  {
+    "question": "Quy trình xin chuyển ngành tại RMIT Vietnam gồm những bước nào?",
+    "expected_answer": "Sinh viên muốn chuyển ngành cần liên hệ tư vấn viên học thuật (academic advisor), nộp đơn chuyển ngành qua cổng myRMIT, đáp ứng yêu cầu tối thiểu của ngành mới, và được phê duyệt bởi khoa tiếp nhận.",
+    "expected_context": "Trang Academic Policies, mục Program Transfer"
+  },
+  {
+    "question": "RMIT Vietnam có câu lạc bộ sinh viên nào đáng tham gia?",
+    "expected_answer": "RMIT Vietnam có nhiều câu lạc bộ sinh viên đa dạng bao gồm các CLB thể thao, nghệ thuật, văn hóa, học thuật và thiện nguyện. Sinh viên đăng ký tham gia qua Student Life portal.",
+    "expected_context": "Trang Student Life, mục Clubs and Societies"
+  },
+  {
+    "question": "Làm thế nào để xin giấy xác nhận sinh viên tại RMIT?",
+    "expected_answer": "Sinh viên có thể yêu cầu giấy xác nhận sinh viên (enrolment verification letter) thông qua cổng myRMIT hoặc liên hệ trực tiếp với Student Connect. Thời gian xử lý thường từ 3-5 ngày làm việc.",
+    "expected_context": "Trang Student Services, mục Document Requests"
+  },
+  {
+    "question": "Chính sách nghỉ phép học tập (leave of absence) tại RMIT Vietnam như thế nào?",
+    "expected_answer": "Sinh viên có thể xin nghỉ phép học tập (leave of absence) tối đa theo quy định của trường. Cần nộp đơn qua myRMIT trước thời hạn, nêu rõ lý do và thời gian nghỉ dự kiến. Thời gian nghỉ phép không tính vào thời gian hoàn thành chương trình.",
+    "expected_context": "Trang Academic Policies, mục Leave of Absence"
   }
 ]
