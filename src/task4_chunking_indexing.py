@@ -56,15 +56,15 @@ CHUNK_OVERLAP = 50      # Vì sao chọn 50? ~10% overlap giúp tránh mất ng�
                         # Không quá lớn để tránh trùng lặp quá nhiều trong index.
 CHUNKING_METHOD = "recursive"  # "recursive" | "markdown_header" | "semantic"
 
-# Embedding model: BAAI/bge-m3
-# Vì sao chọn BAAI/bge-m3:
-#   - Multilingual: hỗ trợ tốt cả tiếng Việt lẫn tiếng Anh — phù hợp cho corpus
-#     University Services có cả nội dung tiếng Việt và thuật ngữ tiếng Anh
-#   - 1024 dimensions: cân bằng giữa chất lượng embedding và kích thước lưu trữ
-#   - State-of-the-art trên MTEB benchmark cho multilingual tasks
-#   - Hỗ trợ dense, sparse và ColBERT retrieval trong cùng 1 model
-EMBEDDING_MODEL = "BAAI/bge-m3"  # Mặc định: multilingual, tốt cho tiếng Việt lẫn tiếng Anh
-EMBEDDING_DIM = 1024
+# Embedding model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+# Vì sao chọn paraphrase-multilingual-MiniLM-L12-v2 (thay cho bge-m3 ở bản đánh giá này):
+#   - Multilingual: hỗ trợ 50+ ngôn ngữ kể cả tiếng Việt — phù hợp corpus University
+#     Services có nội dung tiếng Việt lẫn thuật ngữ tiếng Anh
+#   - Nhẹ (384 dim, ~120MB), load nhanh, đã cache sẵn → tránh tải bge-m3 (~2.4GB)
+#     khi chạy benchmark trong môi trường lab
+#   - Đủ chất lượng cho retrieval đánh giá định tính (benchmark RAGAS)
+EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+EMBEDDING_DIM = 384
 
 # Vector store: ChromaDB
 # Vì sao chọn ChromaDB:

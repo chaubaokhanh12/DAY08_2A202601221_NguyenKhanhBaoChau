@@ -1,17 +1,142 @@
 [
   {
-    "question": "Học phí hàng năm của chương trình Business tại RMIT Vietnam là bao nhiêu?",
-    "expected_answer": "Khoảng 375.840.000 VND mỗi năm (tùy chương trình cụ thể).",
-    "expected_context": "Trang Tuition Fees, mục Undergraduate Programs"
+    "id": "G01",
+    "category": "tuition_fees",
+    "question": "Phí xét hồ sơ (application fee) cho chương trình University Pathway và Higher Education tại RMIT Vietnam là bao nhiêu và có được hoàn lại không?",
+    "expected_answer": "Phí xét hồ sơ là ₫2.000.000 cho mỗi đơn đăng ký, và đây là khoản phí KHÔNG hoàn lại (non-refundable). Áp dụng cho tất cả chương trình University Pathway/Higher Education, kể cả sinh viên English Pathway tại RMIT Vietnam.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 8.1 Application fees"
   },
   {
-    "question": "Học phí được thanh toán theo hình thức nào?",
-    "expected_answer": "Thanh toán theo từng học kỳ, tính theo từng môn học đã đăng ký.",
-    "expected_context": "Trang Tuition Fees, mục Payment Structure"
+    "id": "G02",
+    "category": "tuition_fees",
+    "question": "Sinh viên mới nhập học cần đóng bao nhiêu tiền đặt cọc (deposit) để giữ chỗ trong chương trình?",
+    "expected_answer": "Tiền đặt cọc (deposit) là ₫20.000.000 để giữ chỗ (reserve a place) trong chương trình đã chọn.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 8.2 Deposit"
   },
   {
-    "question": "Trường có cung cấp ký túc xá trong khuôn viên không?",
-    "expected_answer": "Không — trường không cung cấp chỗ ở trong khuôn viên, nhưng có đội ngũ hỗ trợ sinh viên tìm chỗ ở gần trường.",
-    "expected_context": "Trang Accommodation Services"
+    "id": "G03",
+    "category": "tuition_fees",
+    "question": "Chính sách hỗ trợ học phí cho gia đình có nhiều thành viên cùng học (Family Tuition fee assistance) như thế nào?",
+    "expected_answer": "Giảm 5% học phí khi sinh viên chứng minh được có người thân trong gia đình cũng đang học tại RMIT Vietnam. Áp dụng cho thời gian học chương trình University Pathway và Higher Education; cần nộp đơn hợp lệ kèm bằng chứng quan hệ gia đình. Có thể kết hợp với học bổng nhưng không kết hợp với các hỗ trợ học phí khác và không áp dụng trả lùi.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 4.2 Family Tuition fee assistance program"
+  },
+  {
+    "id": "G04",
+    "category": "tuition_fees",
+    "question": "RMIT Vietnam có những phương thức thanh toán học phí nào?",
+    "expected_answer": "Có 4 phương thức: (1) Chuyển khoản ngân hàng (Bank Transfer) qua tài khoản Vietcombank theo cơ sở (HCM/Hà Nội/Đà Nẵng); (2) Thanh toán trực tuyến (Online Payment) qua hệ thống RMIT/iB@NKING; (3) Thẻ tín dụng (Credit card) tại quầy thu ngân 3 cơ sở; (4) Nộp tiền mặt tại Vietcombank (Cash Deposit) — cần xuất trình giấy tờ tùy thân/hộ chiếu.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 7 Payment Methods (7.1–7.4)"
+  },
+  {
+    "id": "G05",
+    "category": "tuition_fees",
+    "question": "Nếu sinh viên không đóng học phí đúng hạn (overdue) thì bị phạt bao nhiêu?",
+    "expected_answer": "Phí hành chính ₫200.000 nếu không thanh toán đúng Ngày Hạn Chót Thanh Toán Học Phí (Payment Date), kèm theo các chế tài bổ sung theo Mục 9.5 (có thể bị rút môn học hành chính).",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 6.7.6 Overdue payment fees"
+  },
+  {
+    "id": "G06",
+    "category": "tuition_fees",
+    "question": "Phí mượn sách thư viện trả trễ (overdue) mỗi ngày là bao nhiêu và mỗi sinh viên mới được cấp bao nhiêu tiền in miễn phí?",
+    "expected_answer": "Phí trả trễ sách thư viện là ₫5.000 cho mỗi ngày trễ. Mỗi sinh viên mới được cấp ban đầu ₫50.000 tiền in (printing credit) miễn phí; hết thì tự nạp thêm.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 6.1 Printing Charges & 6.2 Library Charges"
+  },
+  {
+    "id": "G07",
+    "category": "tuition_fees",
+    "question": "Bảo hiểm y tế (Medical Insurance) đối với sinh viên tại RMIT Vietnam có bắt buộc không?",
+    "expected_answer": "Có, bắt buộc. Với sinh viên Việt Nam áp dụng theo Nghị định 105/2014/NĐ-CP — BHYT bắt buộc do trường thu và chuyển cho cơ quan BHXH địa phương, phí chia tỷ lệ theo học kỳ nhập học đầu tiên. Với sinh viên quốc tế, RMIT sắp xếp gói bảo hiểm y tế trong suốt thời gian học; nếu tự mua phải nộp đơn và bằng chứng trước khai giảng ít nhất 10 ngày.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 5.1 Medical Insurance Fee (5.1.1 & 5.1.2)"
+  },
+  {
+    "id": "G08",
+    "category": "tuition_fees",
+    "question": "Sinh viên học khóa tiêu chuẩn (standard course) rút môn sau tuần thứ 8 của học kỳ thì bị xử lý thế nào?",
+    "expected_answer": "Rút môn sau ngày Thứ Sáu tuần thứ 8: toàn bộ phí của môn đó vẫn phải đóng VÀ bị phạt học thuật NN (Fail) — môn bị rớt sẽ được liệt kê trong bảng điểm của sinh viên.",
+    "expected_context": "tuition-fees-and-charges-rmit-2026.pdf — Mục 6.7.1 Standard courses"
+  },
+  {
+    "id": "G09",
+    "category": "scholarships",
+    "question": "Chương trình học bổng 2026 của RMIT Vietnam có tổng giá trị và số lượng học bổng bao nhiêu?",
+    "expected_answer": "174 học bổng thuộc các danh mục nghiên cứu và merit-based, với tổng giá trị hơn 200 tỷ VND — mức kỷ lục, trong đó học bổng nghiên cứu làm tăng hơn gấp ba quỹ học bổng hàng năm.",
+    "expected_context": "article_01 — 'RMIT Vietnam announces record 2026 scholarships worth more than 200 billion VND'"
+  },
+  {
+    "id": "G10",
+    "category": "scholarships",
+    "question": "Hạn chót nộp đơn học bổng 2026 cho hầu hết danh mục dành cho prospective undergraduate students là khi nào?",
+    "expected_answer": "3 tháng 7 năm 2026 (3 July 2026). Trừ 4 danh mục có lịch riêng: Foundation Studies Scholarship, International Excellence Scholarship, Postgraduate và PhD Scholarship.",
+    "expected_context": "article_01 — 'RMIT Vietnam announces record 2026 scholarships worth more than 200 billion VND'"
+  },
+  {
+    "id": "G11",
+    "category": "scholarships",
+    "question": "Học bổng Vice-Chancellor's Scholar đòi hỏi hồ sơ gì và người trúng tuyển được hưởng gì?",
+    "expected_answer": "Tuyển chọn dựa trên academic excellence, community involvement và leadership potential. Ứng viên nộp video giới thiệu, personal statement, thư giới thiệu và portfolio số, tham gia quy trình 3 vòng (kể cả phỏng vấn tiếng Anh). Người trúng tuyển được miễn 100% học phí (100% tuition fee coverage) cho chương trình undergraduate.",
+    "expected_context": "article_01 & article_02 — Vice-Chancellor's Scholar (full-tuition) section"
+  },
+  {
+    "id": "G12",
+    "category": "scholarships",
+    "question": "Học bổng Opportunity Scholarship dành cho ai và hỗ trợ những gì?",
+    "expected_answer": "Dành cho sinh viên khuyết tật và/hoặc hoàn cảnh khó khăn (financial disadvantage). Mỗi suất (theo 2025) bao gồm full tuition cho chương trình tiếng Anh và higher education, sinh hoạt phí hàng tháng, một laptop và hỗ trợ đi lại nếu cần. Từ khi ra mắt 2014 chương trình đã cấp cho 46 sinh viên, trị giá hơn 78,3 tỷ VND.",
+    "expected_context": "article_02 — 'RMIT Vietnam awards 47.5 billion VND in 2025 scholarships' (Opportunity Scholarship program)"
+  },
+  {
+    "id": "G13",
+    "category": "scholarships",
+    "question": "Người nhận học bổng cần duy trì GPA tích lũy tối thiểu bao nhiêu để không bị thu hồi học bổng?",
+    "expected_answer": "GPA tích lũy tối thiểu 2.0; riêng người nhận Opportunity Scholarship là tối thiểu 1.0. Nếu không duy trì được mức này, trường có quyền chấm dứt/thu hồi học bổng.",
+    "expected_context": "scholarship-terms-and-conditions-rmit.pdf — Điều 24d (maintain accumulative GPA of at least 2.0 / 1.0 for Opportunity)"
+  },
+  {
+    "id": "G14",
+    "category": "scholarships",
+    "question": "Người nhận học bổng được đi exchange và xin leave of absence tối đa bao nhiêu?",
+    "expected_answer": "Được đi exchange tối đa 2 học kỳ tại đối tác của RMIT Vietnam (điều 13). Được xin leave of absence nhưng không quá 2 học kỳ liên tiếp trong suốt chương trình (điều 14). Học bổng không thể quy đổi thành tiền mặt hoặc chuyển nhượng.",
+    "expected_context": "scholarship-terms-and-conditions-rmit.pdf — Điều 13 (exchange) & 14 (leave of absence)"
+  },
+  {
+    "id": "G15",
+    "category": "scholarships",
+    "question": "Học bổng Erasmus+ đã đưa sinh viên Nguyễn Thùy Dương đến học ở đâu và quy trình tìm hiểu cơ hội này qua đâu?",
+    "expected_answer": "Đến CETT — trường chuyên ngành Du lịch & Khách sạn trực thuộc Đại học Barcelona (Tây Ban Nha). Học bổng Erasmus+ có thể hỗ trợ stipend hàng tháng và hỗ trợ đi lại cho sinh viên đủ điều kiện. Cơ hội này được giới thiệu qua đội ngũ RMIT Mobility (đặt lịch tư vấn).",
+    "expected_context": "article_04 — 'First-year student embraces Barcelona exchange experience from Erasmus+ scholarship'"
+  },
+  {
+    "id": "G16",
+    "category": "accommodation",
+    "question": "RMIT Vietnam có cung cấp chỗ ở (ký túc xá) trong khuôn viên cho sinh viên không?",
+    "expected_answer": "Không — RMIT Vietnam KHÔNG cung cấp chỗ ở trong khuôn viên và không liên kết chính thức với các nhà cung cấp. Trường phát hành 'Accommodation Suggestion List' liệt kê các nhà cung cấp độc lập, do tư nhân vận hành ở gần cơ sở (District 7 – Saigon South và Ba Đình – Hà Nội), cùng đội ngũ International Student Support hỗ trợ sinh viên tìm chỗ ở.",
+    "expected_context": "accommodation-hcm-advice-rmit.pdf & accommodation-hanoi-advice-rmit.pdf — Accommodation Suggestion List"
+  },
+  {
+    "id": "G17",
+    "category": "accommodation",
+    "question": "Sinh viên quốc tế thuê nhà ở Việt Nam cần lưu ý gì về thời hạn hợp đồng, tiền cọc và đăng ký tạm trú?",
+    "expected_answer": "Hợp đồng thuê chuẩn thường 6–12 tháng (có thể thương lượng ngắn hơn), đặt cọc 1–2 tháng tiền nhà và đôi khi 1 tháng trả trước, kết thúc hợp đồng cần báo trước khoảng 30 ngày. Bắt buộc phải đăng ký tạm trú (residence registration) với công an phường — chủ nhà/quản lý tòa nhà thường làm thủ tục này, cần bản sao hộ chiếu, visa và hợp đồng thuê; nên xin xác nhận bằng văn bản.",
+    "expected_context": "accommodation-hcm-advice-rmit.pdf — Step 2 Rental Contract & Step 3 Starting Tenancy"
+  },
+  {
+    "id": "G18",
+    "category": "library",
+    "question": "Sinh viên được mượn tối đa bao nhiêu quyển sách tại thư viện RMIT Vietnam, trong bao lâu, và làm thế nào để đặt phòng học nhóm?",
+    "expected_answer": "Giới hạn mượn 25 quyển sách, mỗi quyển trong 1 tháng; mượn/trả phải thực hiện trực tiếp tại cơ sở thư viện đã đăng ký (chỉ cần thẻ sinh viên). Phòng học nhóm (study room) đặt trực tuyến trước qua hệ thống thư viện, chọn khung giờ phù hợp — nên đặt sớm vì các tuần cao điểm kín nhanh.",
+    "expected_context": "article_03 — 'Newbie 101: Unlock Library Power' (Borrow & return / Study spaces)"
+  },
+  {
+    "id": "G19",
+    "category": "library",
+    "question": "Thư viện RMIT Vietnam cung cấp những nguồn tài liệu/công cụ nghiên cứu nào cho sinh viên?",
+    "expected_answer": "Truy cập hơn 700.000 sách, tạp chí bình duyệt và course readings; công cụ tìm kiếm LibrarySearch (và Advanced Search); các cơ sở dữ liệu chuyên ngành như Euromonitor (Passport), Statista và WARC cho dữ liệu ngành cập nhật; công cụ trích dẫn Easy Cite (chuẩn RMIT Harvard) và hỗ trợ từ thủ thư qua tư vấn mặt đối mặt/chat online.",
+    "expected_context": "article_03 — 'Newbie 101: Unlock Library Power' (Research your assignment / Reference with confidence)"
+  },
+  {
+    "id": "G20",
+    "category": "wellbeing_services",
+    "question": "Khi gặp vấn đề bạo lực gia đình/quấy rối tình dục, sinh viên RMIT có thể liên hệ tổ chức nào qua danh bạ Wellbeing và số hotline nào?",
+    "expected_answer": "Qua 'External Service Provider Directory' của RMIT Wellbeing. Ví dụ HAGAR Vietnam — hotline miễn phí 24/7 số 18008284 (hoặc 024 37282342 trong giờ hành chính) hỗ trợ nhà an toàn, chăm sóc sức khỏe, tư vấn chấn thương. Còn có CSAGA, Blue Dragon, và Tổng đài Quốc gia Bảo vệ Trẻ em 111; khẩn cấp gọi Cảnh sát 113.",
+    "expected_context": "wellbeing-external-service-provider-directory-rmit.pdf — HAGAR Vietnam / Cross-Referencing Index"
   }
 ]
