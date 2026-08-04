@@ -17,7 +17,7 @@ st.set_page_config(
     page_title="UniAssist AI",
     page_icon="🎓",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 if "messages" not in st.session_state:
@@ -57,11 +57,91 @@ st.markdown(
         background: var(--surface);
     }
 
-    header[data-testid="stHeader"],
-    [data-testid="stSidebar"],
-    #MainMenu,
-    footer {
+    #MainMenu, footer {
         display: none !important;
+    }
+
+    header[data-testid="stHeader"] {
+        height: 0;
+        background: transparent;
+    }
+
+    [data-testid="collapsedControl"] {
+        top: 72px;
+        left: 12px;
+        z-index: 1001;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface-lowest);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-testid="stSidebar"] {
+        top: 64px;
+        height: calc(100vh - 64px);
+        border-right: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 8px 0 30px rgba(0, 43, 90, 0.045);
+    }
+
+    [data-testid="stSidebar"] > div:first-child {
+        padding: 1.5rem 1.15rem 2rem;
+    }
+
+    .sidebar-retrieval {
+        margin: 0.25rem 0 1.2rem;
+        padding: 0.95rem 1rem;
+        border: 1px solid rgba(0, 106, 101, 0.16);
+        border-radius: 16px;
+        background: linear-gradient(145deg, rgba(214, 227, 255, 0.58), rgba(111, 247, 238, 0.13));
+    }
+
+    .sidebar-kicker {
+        margin-bottom: 5px;
+        color: var(--secondary);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .sidebar-retrieval h2 {
+        margin: 0;
+        color: var(--primary);
+        font-size: 20px;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+    }
+
+    .sidebar-retrieval p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .pipeline-steps {
+        margin-top: 1.2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .pipeline-step {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 9px 0;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .pipeline-dot {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 8px;
+        border-radius: 999px;
+        background: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 106, 101, 0.09);
     }
 
     [data-testid="stAppViewContainer"] > .main {
@@ -389,6 +469,10 @@ st.markdown(
             margin-top: 8vh;
         }
 
+        [data-testid="stSidebar"] {
+            width: min(86vw, 320px) !important;
+        }
+
         [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
             max-width: 88%;
         }
@@ -421,6 +505,39 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+with st.sidebar:
+    st.markdown(
+        """
+        <section class="sidebar-retrieval">
+            <div class="sidebar-kicker">Knowledge controls</div>
+            <h2>Retrieval Settings</h2>
+            <p>Control how much evidence UniAssist collects before composing an answer.</p>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+    top_k = st.slider(
+        "Sources to retrieve",
+        min_value=3,
+        max_value=10,
+        key="top_k",
+        help="Choose how many knowledge-base chunks are sent to the answer generator.",
+    )
+    st.caption(f"Using the top **{top_k}** knowledge chunks")
+    st.markdown(
+        """
+        <div class="pipeline-steps">
+            <div class="sidebar-kicker">Retrieval flow</div>
+            <div class="pipeline-step"><span class="pipeline-dot"></span>Semantic + BM25 search</div>
+            <div class="pipeline-step"><span class="pipeline-dot"></span>RRF reranking</div>
+            <div class="pipeline-step"><span class="pipeline-dot"></span>PageIndex fallback</div>
+            <div class="pipeline-step"><span class="pipeline-dot"></span>Citation-aware answer</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def render_sources(sources: list[dict]) -> None:
@@ -484,20 +601,6 @@ if not st.session_state.messages:
         </section>
         """,
         unsafe_allow_html=True,
-    )
-
-
-with st.expander("⚙  Retrieval settings"):
-    top_k = st.slider(
-        "Sources to retrieve",
-        min_value=3,
-        max_value=10,
-        key="top_k",
-        help="Choose how many knowledge-base chunks are sent to the answer generator.",
-    )
-    st.caption(
-        "Hybrid retrieval (Semantic + BM25) → RRF reranking → "
-        "PageIndex fallback → citation-aware generation"
     )
 
 

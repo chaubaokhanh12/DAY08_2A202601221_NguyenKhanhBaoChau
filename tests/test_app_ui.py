@@ -19,11 +19,14 @@ def test_uniassist_brand_and_palette_are_present():
     assert "max-width: 800px" in APP_SOURCE
 
 
-def test_custom_shell_replaces_default_sidebar():
-    assert "st.sidebar" not in APP_SOURCE
+def test_retrieval_settings_live_in_collapsible_sidebar():
+    assert "with st.sidebar" in APP_SOURCE
+    assert "sidebar-retrieval" in APP_SOURCE
     assert "uniassist-header" in APP_SOURCE
     assert "uniassist-welcome" in APP_SOURCE
-    assert 'initial_sidebar_state="collapsed"' in APP_SOURCE
+    assert 'initial_sidebar_state="expanded"' in APP_SOURCE
+    assert 'min_value=3' in APP_SOURCE
+    assert 'max_value=10' in APP_SOURCE
 
 
 def test_native_streamlit_interactions_and_rag_call_remain():
