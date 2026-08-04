@@ -38,7 +38,11 @@ TOP_P = 0.9
 TEMPERATURE = 0.3
 
 # TODO: Chọn LLM model (OpenRouter model ID)
+# Dùng model gắn hậu tố ":free" trên OpenRouter nếu chưa có credit trả phí.
+# Khi chỉ có OPENAI_API_KEY (không có OPENROUTER_API_KEY), code tự normalize
+# model name (bỏ prefix "openai/") và gọi OpenAI API trực tiếp.
 LLM_MODEL = "openai/gpt-4o-mini"  # hoặc model ":free" nếu chưa có credit
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 # =============================================================================
@@ -77,15 +81,15 @@ def reorder_for_llm(chunks: list[dict]) -> list[dict]:
     Returns:
         List reordered để maximize LLM attention.
     """
-    # TODO: Implement reordering
-    #
-    # if len(chunks) <= 2:
-    #     return chunks
-    #
-    # front = chunks[::2]   # index 0, 2, 4 -> đặt ở đầu
-    # back = chunks[1::2]   # index 1, 3    -> đặt ở cuối (reversed)
-    # return front + back[::-1]
-    raise NotImplementedError("Implement reorder_for_llm")
+    if len(chunks) <= 2:
+        return list(chunks)
+
+    # front = chunk tốt nhất, tốt thứ 3, tốt thứ 5... → đặt ở đầu prompt
+    front = chunks[::2]
+    # back  = chunk tốt thứ 2, thứ 4... → đặt ở cuối prompt (nhớ tốt thứ nhì)
+    back = chunks[1::2]
+    # Đảo back để tốt thứ 2 nằm ngay cuối prompt (vị trí nhớ tốt thứ nhì).
+    return front + back[::-1]
 
 
 # =============================================================================
@@ -103,23 +107,51 @@ def format_context(chunks: list[dict]) -> str:
     Returns:
         Formatted context string.
     """
-    # TODO: Implement context formatting
-    #
-    # context_parts = []
-    # for i, chunk in enumerate(chunks, 1):
-    #     source = chunk.get("metadata", {}).get("source", f"Source {i}")
-    #     doc_type = chunk.get("metadata", {}).get("type", "unknown")
-    #     context_parts.append(
-    #         f"[Document {i} | Source: {source} | Type: {doc_type}]\n"
-    #         f"{chunk['content']}\n"
-    #     )
-    # return "\n---\n".join(context_parts)
-    raise NotImplementedError("Implement format_context")
+    context_parts = []
+    for i, chunk in enumerate(chunks, 1):
+        source = chunk.get("metadata", {}).get("source", f"Source {i}")
+        doc_type = chunk.get("metadata", {}).get("type", "unknown")
+        context_parts.append(
+            f"[Document {i} | Source: {source} | Type: {doc_type}]\n"
+            f"{chunk['content']}\n"
+        )
+    return "\n---\n".join(context_parts)
 
 
 # =============================================================================
 # GENERATION
 # =============================================================================
+
+CANT_VERIFY_MSG = "Tôi không thể xác minh thông tin này từ nguồn hiện có"
+
+
+def _build_client():
+    """
+    Tạo OpenAI-compatible client:
+    1. Ưu tiên OPENROUTER_API_KEY (nhiều model :free)
+    2. Fallback OPENAI_API_KEY (gọi OpenAI trực tiếp)
+    """
+    from openai import OpenAI
+
+    openrouter_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    openai_key = os.getenv("OPENAI_API_KEY", "").strip()
+
+    if openrouter_key:
+        return OpenAI(api_key=openrouter_key, base_url=OPENROUTER_BASE_URL)
+    if openai_key:
+        return OpenAI(api_key=openai_key)
+    return None
+
+
+def _resolve_model() -> str:
+    """Normalize model name: OpenRouter dùng 'openai/gpt-4o-mini', OpenAI dùng
+    'gpt-4o-mini'. Khi chỉ có OPENAI_API_KEY thì bỏ prefix vendor."""
+    openrouter_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    if openrouter_key:
+        return LLM_MODEL
+    # OpenAI trực tiếp → bỏ prefix "vendor/"
+    return LLM_MODEL.split("/", 1)[-1]
+
 
 def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     """
@@ -133,6 +165,9 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
         5. Call LLM
         6. Return answer + sources
 
+    Nếu không đủ evidence (không có chunks) hoặc không có API key → KHÔNG gọi LLM,
+    trả về câu "không thể xác minh" — trung thực hơn là bịa đặt.
+
     Args:
         query: Câu hỏi của user
 
@@ -143,44 +178,56 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
             'retrieval_source': str  # 'hybrid' hoặc 'pageindex'
         }
     """
-    # TODO: Implement generation pipeline
-    #
-    # # Step 1: Retrieve
-    # chunks = retrieve(query, top_k=top_k)
-    #
-    # # Step 2: Reorder
-    # reordered = reorder_for_llm(chunks)
-    #
-    # # Step 3: Format context
-    # context = format_context(reordered)
-    #
-    # # Step 4: Build prompt
-    # user_message = f"""Context:\n{context}\n\n---\n\nQuestion: {query}"""
-    #
-    # # Step 5: Call LLM (OpenRouter — OpenAI-compatible API)
-    # from openai import OpenAI
-    # api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
-    # client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
-    #
-    # response = client.chat.completions.create(
-    #     model=LLM_MODEL,
-    #     messages=[
-    #         {"role": "system", "content": SYSTEM_PROMPT},
-    #         {"role": "user", "content": user_message}
-    #     ],
-    #     temperature=TEMPERATURE,
-    #     top_p=TOP_P,
-    # )
-    #
-    # answer = response.choices[0].message.content
-    #
-    # # Step 6: Return
-    # return {
-    #     "answer": answer,
-    #     "sources": chunks,
-    #     "retrieval_source": chunks[0].get("source", "hybrid") if chunks else "none"
-    # }
-    raise NotImplementedError("Implement generate_with_citation")
+    # Step 1: Retrieve
+    chunks = retrieve(query, top_k=top_k)
+
+    if not chunks:
+        return {
+            "answer": CANT_VERIFY_MSG,
+            "sources": [],
+            "retrieval_source": "none",
+        }
+
+    # Step 2: Reorder (tránh lost in the middle)
+    reordered = reorder_for_llm(chunks)
+
+    # Step 3: Format context
+    context = format_context(reordered)
+
+    # Step 4: Build prompt
+    user_message = f"Context:\n{context}\n\n---\n\nQuestion: {query}"
+
+    # Step 5: Call LLM
+    client = _build_client()
+    if client is None:
+        print("  ⚠ Không có OPENROUTER_API_KEY/OPENAI_API_KEY → không gọi LLM")
+        return {
+            "answer": CANT_VERIFY_MSG,
+            "sources": chunks,
+            "retrieval_source": chunks[0].get("source", "hybrid"),
+        }
+
+    try:
+        response = client.chat.completions.create(
+            model=_resolve_model(),
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_message},
+            ],
+            temperature=TEMPERATURE,
+            top_p=TOP_P,
+        )
+        answer = response.choices[0].message.content
+    except Exception as e:
+        print(f"  ⚠ LLM call lỗi ({type(e).__name__}: {e}) → trả lời không xác minh")
+        answer = CANT_VERIFY_MSG
+
+    # Step 6: Return
+    return {
+        "answer": answer,
+        "sources": chunks,
+        "retrieval_source": chunks[0].get("source", "hybrid") if chunks else "none",
+    }
 
 
 if __name__ == "__main__":
