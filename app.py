@@ -13,6 +13,8 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).parent
 STANDARDIZED_DIR = PROJECT_ROOT / "data" / "standardized"
 DOCUMENT_COUNT = len(list(STANDARDIZED_DIR.rglob("*.md")))
+LEGAL_DOCUMENT_COUNT = len(list((STANDARDIZED_DIR / "legal").glob("*.md")))
+NEWS_DOCUMENT_COUNT = len(list((STANDARDIZED_DIR / "news").glob("*.md")))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 st.set_page_config(
@@ -34,23 +36,29 @@ st.markdown(
     """
     <style>
     :root {
-        --navy-950: #001b3a;
-        --navy-800: #002b5a;
-        --navy-700: #0b4778;
-        --teal-700: #006a65;
-        --teal-100: #d9f2ef;
-        --canvas: #f4f7fa;
+        --navy-950: #0f172a;
+        --navy-800: #1e3a5f;
+        --navy-700: #274c77;
+        --cobalt-600: #2563eb;
+        --cobalt-700: #1d4ed8;
+        --blue-100: #dbeafe;
+        --teal-700: #0f766e;
+        --teal-100: #ccfbf1;
+        --orange-600: #ea580c;
+        --orange-100: #ffedd5;
+        --canvas: #f3f6fb;
         --surface: #ffffff;
-        --surface-muted: #edf2f6;
-        --text: #172033;
-        --text-muted: #526173;
-        --border: #d9e2ec;
+        --surface-muted: #e9eef5;
+        --text: #0f172a;
+        --text-muted: #52647a;
+        --border: #cbd5e1;
         --danger: #b42318;
-        --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.04);
-        --shadow-md: 0 12px 32px rgba(16, 24, 40, 0.09);
+        --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(30, 58, 95, 0.06);
+        --shadow-md: 0 18px 44px rgba(30, 58, 95, 0.13);
+        --shadow-lg: 0 28px 70px rgba(30, 58, 95, 0.18);
         --radius-sm: 10px;
         --radius-md: 16px;
-        --radius-lg: 22px;
+        --radius-lg: 24px;
     }
 
     html,
@@ -64,7 +72,10 @@ st.markdown(
     body,
     [data-testid="stAppViewContainer"],
     .stApp {
-        background: var(--canvas);
+        background:
+            radial-gradient(circle at 16% 10%, rgba(37, 99, 235, 0.10), transparent 27rem),
+            radial-gradient(circle at 88% 18%, rgba(234, 88, 12, 0.07), transparent 24rem),
+            var(--canvas);
     }
 
     #MainMenu,
@@ -134,8 +145,8 @@ st.markdown(
         place-items: center;
         color: white;
         border-radius: 12px;
-        background: var(--navy-800);
-        box-shadow: 0 6px 16px rgba(0, 43, 90, 0.18);
+        background: linear-gradient(145deg, var(--cobalt-600), var(--navy-800));
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.26);
     }
 
     .brand-mark svg,
@@ -185,7 +196,7 @@ st.markdown(
         min-height: 36px;
         padding: 0 12px;
         color: var(--teal-700);
-        border: 1px solid #b8ded9;
+        border: 1px solid #99d5ce;
         border-radius: 999px;
         background: #f2fbfa;
         font-size: 12px;
@@ -240,14 +251,17 @@ st.markdown(
     .sidebar-retrieval {
         margin-bottom: 20px;
         padding: 16px;
-        border: 1px solid #c8e4e1;
+        border: 1px solid rgba(255, 255, 255, 0.18);
         border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #f8fcfc, #edf8f7);
+        background:
+            radial-gradient(circle at 90% 0%, rgba(37, 99, 235, 0.55), transparent 10rem),
+            linear-gradient(145deg, #162d4d, var(--navy-800));
+        box-shadow: 0 16px 34px rgba(30, 58, 95, 0.18);
     }
 
     .sidebar-kicker {
         margin-bottom: 6px;
-        color: var(--teal-700);
+        color: #99f6e4;
         font-size: 11px;
         font-weight: 750;
         letter-spacing: 0.08em;
@@ -258,7 +272,7 @@ st.markdown(
         display: flex;
         align-items: center;
         gap: 9px;
-        color: var(--navy-950);
+        color: white;
     }
 
     .sidebar-title-row svg {
@@ -275,7 +289,7 @@ st.markdown(
 
     .sidebar-retrieval p {
         margin: 9px 0 0;
-        color: var(--text-muted);
+        color: #d8e5f2;
         font-size: 12px;
         line-height: 1.55;
     }
@@ -318,47 +332,242 @@ st.markdown(
     }
 
     .knowledge-strip {
-        margin-bottom: 34px;
-        padding: 12px 14px;
+        margin-bottom: 18px;
+    }
+
+    .insight-rail {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .insight-card {
+        min-height: 82px;
+        padding: 14px 15px;
         display: flex;
         align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(203, 213, 225, 0.78);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: var(--shadow-sm);
+        backdrop-filter: blur(12px);
+    }
+
+    .insight-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 38px;
+        border-radius: 12px;
+    }
+
+    .insight-icon svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .insight-icon.blue {
+        color: var(--cobalt-700);
+        background: var(--blue-100);
+    }
+
+    .insight-icon.teal {
+        color: var(--teal-700);
+        background: var(--teal-100);
+    }
+
+    .insight-icon.orange {
+        color: var(--orange-600);
+        background: var(--orange-100);
+    }
+
+    .insight-copy strong,
+    .insight-copy span {
+        display: block;
+    }
+
+    .insight-copy strong {
+        color: var(--navy-950);
+        font-size: 14px;
+        font-weight: 750;
+        line-height: 1.2;
+    }
+
+    .insight-copy span {
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .bento-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(210px, 0.85fr);
+        gap: 14px;
+        margin: 0 0 30px;
+    }
+
+    .hero-primary {
+        position: relative;
+        min-height: 286px;
+        padding: 32px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 28px;
+        background:
+            radial-gradient(circle at 88% 12%, rgba(96, 165, 250, 0.62), transparent 13rem),
+            radial-gradient(circle at 8% 100%, rgba(15, 118, 110, 0.36), transparent 14rem),
+            linear-gradient(145deg, #172f50 0%, var(--navy-800) 48%, #1e4f91 100%);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .hero-primary::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        right: -70px;
+        bottom: -90px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+        box-shadow: 0 0 0 28px rgba(255, 255, 255, 0.035), 0 0 0 58px rgba(255, 255, 255, 0.025);
+    }
+
+    .hero-topline,
+    .hero-proof,
+    .metric-topline {
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-topline {
+        position: relative;
+        z-index: 1;
         justify-content: space-between;
         gap: 16px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.78);
+    }
+
+    .hero-pill {
+        padding: 7px 10px;
+        color: #fff7ed;
+        border: 1px solid rgba(255, 237, 213, 0.32);
+        border-radius: 999px;
+        background: rgba(234, 88, 12, 0.78);
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .hero-year {
+        color: #dbeafe;
+        font-size: 10px;
+        font-weight: 650;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 520px;
+        margin: 30px 0 26px;
+    }
+
+    .hero-content h1 {
+        margin: 0;
+        color: white;
+        font-size: clamp(31px, 5vw, 46px);
+        line-height: 1.08;
+        letter-spacing: -0.052em;
+    }
+
+    .hero-content p {
+        max-width: 470px;
+        margin: 14px 0 0;
+        color: #dce9f7;
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .hero-proof {
+        position: relative;
+        z-index: 1;
+        gap: 8px;
+        color: #ccfbf1;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+    .hero-proof svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hero-metrics {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .metric-card {
+        min-height: 82px;
+        padding: 15px 16px;
+        overflow: hidden;
+        border: 1px solid rgba(203, 213, 225, 0.78);
+        border-radius: 20px;
+        background: var(--surface);
         box-shadow: var(--shadow-sm);
     }
 
-    .knowledge-items {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 6px 18px;
-    }
+    .metric-card.blue { background: linear-gradient(145deg, #eff6ff, #dbeafe); }
+    .metric-card.teal { background: linear-gradient(145deg, #f0fdfa, #ccfbf1); }
+    .metric-card.orange { background: linear-gradient(145deg, #fff7ed, #ffedd5); }
 
-    .knowledge-item {
-        gap: 7px;
+    .metric-topline {
+        justify-content: space-between;
+        gap: 12px;
         color: var(--text-muted);
-        font-size: 11px;
+        font-size: 9px;
+        font-weight: 750;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+    }
+
+    .metric-value {
+        margin-top: 5px;
+        color: var(--navy-950);
+        font-size: 23px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.04em;
+    }
+
+    .metric-note {
+        margin-top: 5px;
+        color: var(--text-muted);
+        font-size: 9px;
         font-weight: 600;
-        white-space: nowrap;
     }
 
-    .knowledge-item svg {
-        width: 15px;
-        height: 15px;
-        color: var(--teal-700);
-    }
-
-    .knowledge-badge {
-        padding: 5px 9px;
-        color: var(--navy-800);
+    .knowledge-meter {
+        height: 5px;
+        margin-top: 9px;
+        overflow: hidden;
         border-radius: 999px;
-        background: var(--surface-muted);
-        font-size: 10px;
-        font-weight: 700;
-        white-space: nowrap;
+        background: rgba(100, 116, 139, 0.16);
+    }
+
+    .knowledge-meter span {
+        width: 78%;
+        height: 100%;
+        display: block;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cobalt-600), var(--teal-700));
     }
 
     .uniassist-welcome {
@@ -555,6 +764,19 @@ st.markdown(
         box-shadow: var(--shadow-sm);
     }
 
+    .evidence-insight-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .evidence-insight-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--cobalt-600), var(--teal-700));
+    }
+
     .source-index {
         width: 28px;
         height: 28px;
@@ -605,16 +827,95 @@ st.markdown(
     }
 
     .suggestion-label {
-        margin: 26px 0 10px;
+        margin: 30px 0 10px;
         color: var(--navy-950);
-        font-size: 12px;
-        font-weight: 750;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
     }
 
     .suggestion-help {
-        margin: -5px 0 13px;
+        margin: -5px 0 16px;
         color: var(--text-muted);
-        font-size: 11px;
+        font-size: 12px;
+    }
+
+    .topic-card-grid {
+        margin-top: 10px;
+    }
+
+    .topic-card {
+        position: relative;
+        min-height: 132px;
+        margin-bottom: 8px;
+        padding: 17px;
+        overflow: hidden;
+        border: 1px solid rgba(203, 213, 225, 0.78);
+        border-radius: 18px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .topic-card::after {
+        content: "";
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        right: -35px;
+        bottom: -45px;
+        border: 16px solid rgba(255, 255, 255, 0.36);
+        border-radius: 50%;
+    }
+
+    .topic-card.blue { background: linear-gradient(145deg, #eff6ff, #dbeafe); }
+    .topic-card.teal { background: linear-gradient(145deg, #f0fdfa, #ccfbf1); }
+    .topic-card.orange { background: linear-gradient(145deg, #fff7ed, #ffedd5); }
+    .topic-card.navy { background: linear-gradient(145deg, #eef2f7, #dce6f1); }
+
+    .topic-card .topic-icon {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        margin-top: 0;
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.68);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .topic-card.blue .topic-icon { color: var(--cobalt-700); }
+    .topic-card.teal .topic-icon { color: var(--teal-700); }
+    .topic-card.orange .topic-icon { color: var(--orange-600); }
+    .topic-card.navy .topic-icon { color: var(--navy-800); }
+
+    .topic-icon svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .topic-card strong {
+        position: relative;
+        z-index: 1;
+        display: block;
+        margin-top: 13px;
+        color: var(--navy-950);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .topic-card .topic-description {
+        position: relative;
+        z-index: 1;
+        display: block;
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.45;
     }
 
     [data-testid="stButton"] button {
@@ -631,14 +932,16 @@ st.markdown(
     }
 
     [data-testid="stButton"] button:hover {
-        color: var(--teal-700);
-        border-color: #9bcfc9;
-        background: #f8fcfc;
-        box-shadow: 0 5px 16px rgba(0, 106, 101, 0.08);
+        color: white;
+        border-color: var(--cobalt-600);
+        background: var(--cobalt-600);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.20);
     }
 
     [data-testid="stButton"] button:active {
-        background: #edf8f7;
+        color: white;
+        border-color: var(--cobalt-700);
+        background: var(--cobalt-700);
         box-shadow: none;
     }
 
@@ -660,7 +963,7 @@ st.markdown(
 
     [data-testid="stChatInput"]:focus-within {
         border-color: var(--teal-700);
-        box-shadow: 0 0 0 3px rgba(0, 106, 101, 0.11), var(--shadow-md);
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13), var(--shadow-md);
     }
 
     [data-testid="stChatInput"] button {
@@ -705,13 +1008,37 @@ st.markdown(
             width: min(86vw, 320px) !important;
         }
 
-        .knowledge-strip,
-        .evidence-title {
-            align-items: flex-start;
+        .bento-hero {
+            grid-template-columns: 1fr;
         }
 
-        .knowledge-strip {
-            flex-direction: column;
+        .hero-primary {
+            min-height: 265px;
+            padding: 25px;
+        }
+
+        .hero-metrics {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr;
+            gap: 8px;
+        }
+
+        .metric-card {
+            min-height: 100px;
+            padding: 12px;
+        }
+
+        .metric-topline {
+            align-items: flex-start;
+            min-height: 24px;
+        }
+
+        .insight-rail {
+            grid-template-columns: 1fr;
+        }
+
+        .evidence-title {
+            align-items: flex-start;
         }
 
         .uniassist-welcome {
@@ -816,22 +1143,31 @@ with st.sidebar:
 
 st.markdown(
     f"""
-    <section class="knowledge-strip" aria-label="Knowledge base status">
-        <div class="knowledge-items">
-            <span class="knowledge-item">
+    <section class="knowledge-strip insight-rail" aria-label="Knowledge base status">
+        <div class="insight-card">
+            <span class="insight-icon blue">
                 <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path>
                 </svg>
-                {DOCUMENT_COUNT} standardized documents
             </span>
-            <span class="knowledge-item">
-                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-5"></path>
-                </svg>
-                RMIT policies and services
-            </span>
+            <span class="insight-copy"><strong>{DOCUMENT_COUNT} sources</strong><span>Standardized knowledge</span></span>
         </div>
-        <span class="knowledge-badge">Coverage: 2025–2026</span>
+        <div class="insight-card">
+            <span class="insight-icon teal">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 6h6l2 2h8v10H4z"></path><path d="m9 13 2 2 4-4"></path>
+                </svg>
+            </span>
+            <span class="insight-copy"><strong>{LEGAL_DOCUMENT_COUNT} guides</strong><span>Policies and services</span></span>
+        </div>
+        <div class="insight-card">
+            <span class="insight-icon orange">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 5h14v14H5z"></path><path d="M8 9h8M8 13h5M8 16h7"></path>
+                </svg>
+            </span>
+            <span class="insight-copy"><strong>{NEWS_DOCUMENT_COUNT} stories</strong><span>Student news and updates</span></span>
+        </div>
     </section>
     """,
     unsafe_allow_html=True,
@@ -872,7 +1208,7 @@ def render_sources(sources: list[dict]) -> None:
             score = 0.0
 
         st.markdown(
-            '<div class="source-card">'
+            '<div class="source-card evidence-insight-card">'
             f'<span class="source-index">{index:02d}</span>'
             '<span class="source-copy">'
             f"<strong>{html.escape(source_name)}</strong>"
@@ -918,21 +1254,49 @@ def render_message(message: dict) -> None:
 
 if not st.session_state.messages:
     st.markdown(
-        """
+        f"""
+        <section class="bento-hero" aria-label="UniAssist overview">
+            <article class="hero-primary">
+                <div class="hero-topline">
+                    <span class="hero-pill">Academic Copilot</span>
+                    <span class="hero-year">Knowledge coverage · 2025–2026</span>
+                </div>
+                <div class="hero-content">
+                    <h1>Find the answer.<br>See the evidence.</h1>
+                    <p>
+                        Explore tuition, scholarships, accommodation, library services,
+                        and student wellbeing through verified RMIT source material.
+                    </p>
+                </div>
+                <div class="hero-proof">
+                    <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path>
+                    </svg>
+                    Evidence is shown alongside every supported answer
+                </div>
+            </article>
+            <aside class="hero-metrics" aria-label="Knowledge metrics">
+                <div class="metric-card blue">
+                    <div class="metric-topline"><span>Knowledge base</span><span>Live</span></div>
+                    <div class="metric-value">{DOCUMENT_COUNT}</div>
+                    <div class="metric-note">standardized documents</div>
+                </div>
+                <div class="metric-card teal">
+                    <div class="metric-topline"><span>Evidence depth</span><span>Top-k</span></div>
+                    <div class="metric-value">{st.session_state.top_k}</div>
+                    <div class="knowledge-meter"><span></span></div>
+                </div>
+                <div class="metric-card orange">
+                    <div class="metric-topline"><span>Focus areas</span><span>RMIT</span></div>
+                    <div class="metric-value">5</div>
+                    <div class="metric-note">student service domains</div>
+                </div>
+            </aside>
+        </section>
         <section class="uniassist-welcome">
-            <div class="welcome-symbol" aria-hidden="true">
-                <svg class="inline-icon" viewBox="0 0 24 24">
-                    <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path>
-                    <path d="M8 14a4 4 0 1 1 8 0c0 1.7-1 2.5-2 3.5V20h-4v-2.5C9 16.5 8 15.7 8 14z"></path>
-                </svg>
-            </div>
-            <div class="welcome-eyebrow">RMIT University Services</div>
-            <h1>Reliable answers, grounded in university sources.</h1>
-            <p>
-                Ask about tuition, scholarships, accommodation, library services,
-                and student wellbeing. UniAssist finds evidence before it answers.
-            </p>
-            <div class="trust-line">Answers include the documents used whenever evidence is available.</div>
+            <div class="welcome-eyebrow">Ask with confidence</div>
+            <h1>What would you like to understand?</h1>
+            <p>Choose a verified topic below or ask your own question in the composer.</p>
         </section>
         """,
         unsafe_allow_html=True,
@@ -943,38 +1307,71 @@ for persisted_message in st.session_state.messages:
     render_message(persisted_message)
 
 
-st.markdown(
-    """
-    <div class="suggestion-label">Start with a verified topic</div>
-    <div class="suggestion-help">These questions match the documents currently in the knowledge base.</div>
-    """,
-    unsafe_allow_html=True,
-)
-
 suggestions = [
     (
+        "blue",
         "Tuition and Census Date",
+        "Understand fee liability and the deadline that changes it.",
+        "Ask about tuition",
         "What is the Census Date, and how does it affect my tuition fee liability?",
+        '<path d="M4 19.5V6.8L12 3l8 3.8v12.7"></path><path d="M7 10h10M7 14h10M8 19.5v-3h8v3"></path>',
     ),
     (
+        "teal",
         "Scholarship requirements",
+        "Check the academic standards needed to keep an award.",
+        "Check scholarship rules",
         "What GPA and study load must RMIT scholarship recipients maintain?",
+        '<path d="m3 9 9-5 9 5-9 5-9-5Z"></path><path d="M7 11.5V16c2.8 2 7.2 2 10 0v-4.5M21 9v6"></path>',
     ),
     (
+        "orange",
         "Housing checklist",
+        "Review the contract, landlord and property before signing.",
+        "Review housing steps",
         "What should international students check before signing a rental contract in Ho Chi Minh City?",
+        '<path d="m3 11 9-7 9 7"></path><path d="M5 10v10h14V10M9 20v-6h6v6"></path>',
     ),
     (
+        "navy",
         "Library study rooms",
+        "Find the booking flow, conditions and access guidance.",
+        "Explore room booking",
         "How can I book a study room through the RMIT Library?",
+        '<path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h8M8 17h5"></path>',
     ),
 ]
 
-suggestion_columns = st.columns(2)
-for index, (label, question) in enumerate(suggestions):
-    with suggestion_columns[index % 2]:
-        if st.button(label, key=f"suggestion_{index}", use_container_width=True):
-            st.session_state.pending_query = question
+if not st.session_state.messages:
+    st.markdown(
+        """
+        <section class="topic-card-grid">
+            <div class="suggestion-label">Start with a verified topic</div>
+            <div class="suggestion-help">Four useful entry points grounded in the current knowledge base.</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    suggestion_columns = st.columns(2)
+    for index, (tone, title, description, action, question, icon_paths) in enumerate(
+        suggestions
+    ):
+        with suggestion_columns[index % 2]:
+            st.markdown(
+                f"""
+                <article class="topic-card {tone}">
+                    <span class="topic-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">{icon_paths}</svg>
+                    </span>
+                    <strong>{html.escape(title)}</strong>
+                    <span class="topic-description">{html.escape(description)}</span>
+                </article>
+                """,
+                unsafe_allow_html=True,
+            )
+            if st.button(action, key=f"suggestion_{index}", use_container_width=True):
+                st.session_state.pending_query = question
 
 
 user_input = st.chat_input("Ask a question about RMIT services and policies")

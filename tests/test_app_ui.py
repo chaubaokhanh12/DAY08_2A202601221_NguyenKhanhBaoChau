@@ -14,8 +14,9 @@ APP_SOURCE = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
 
 def test_uniassist_brand_and_palette_are_present():
     assert "UniAssist AI" in APP_SOURCE
-    assert "#002b5a" in APP_SOURCE
-    assert "#006a65" in APP_SOURCE
+    assert "#1e3a5f" in APP_SOURCE
+    assert "#2563eb" in APP_SOURCE
+    assert "#ea580c" in APP_SOURCE
     assert "max-width: 800px" in APP_SOURCE
 
 
@@ -66,3 +67,15 @@ def test_structural_icons_are_vectors_instead_of_emoji():
     assert "🎓" not in APP_SOURCE
     assert "⚠️" not in APP_SOURCE
     assert "❌" not in APP_SOURCE
+
+
+def test_richer_editorial_bento_visual_system_is_present():
+    assert "bento-hero" in APP_SOURCE
+    assert "insight-rail" in APP_SOURCE
+    assert "topic-card-grid" in APP_SOURCE
+    assert "knowledge-meter" in APP_SOURCE
+    assert "evidence-insight-card" in APP_SOURCE
+    assert "#1e3a5f" in APP_SOURCE
+    assert "#2563eb" in APP_SOURCE
+    assert "#ea580c" in APP_SOURCE
+    assert "radial-gradient" in APP_SOURCE

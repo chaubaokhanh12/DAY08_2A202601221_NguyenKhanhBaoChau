@@ -2,24 +2,30 @@
 
 ## Design Intent
 
-UniAssist is a trustworthy university-services research assistant. The interface combines AI-native conversational patterns with the clarity of a knowledge base and the authority of an institutional service. It should feel calm, evidence-led, and fast rather than playful or futuristic.
+UniAssist is a trustworthy university-services research assistant. The interface combines AI-native conversational patterns with an editorial bento layout, visible knowledge metrics, and the authority of an institutional service. It should feel energetic and contemporary while keeping long answers calm, evidence-led, and readable.
 
 ## Style
 
-- Primary: AI-Native UI + Minimalism.
-- Supporting: Accessible & Ethical + Trust & Authority.
-- Avoid: AI purple gradients, glass-heavy surfaces, ornamental motion, emoji as structural icons, and dense dashboard chrome.
+- Primary: Bento Grid + Soft UI Evolution.
+- Supporting: AI-Native UI + Trust & Authority + Accessible & Ethical.
+- Visual variance: 7/10 — asymmetric welcome composition with disciplined card geometry.
+- Motion: 3/10 — short state transitions and one subtle status pulse.
+- Density: 5/10 — rich overview, spacious answer reading area.
+- Avoid: generic AI purple gradients, glass-heavy surfaces, ornamental motion, emoji as structural icons, and dense dashboard chrome.
 
 ## Color Tokens
 
 | Token | Value | Role |
 |---|---:|---|
-| `--navy-950` | `#001B3A` | Highest-emphasis text and header |
-| `--navy-800` | `#002B5A` | Primary actions and institutional identity |
-| `--navy-700` | `#0B4778` | Hover and selected states |
-| `--teal-700` | `#006A65` | Retrieval, evidence, and system status |
-| `--teal-100` | `#D9F2EF` | Status backgrounds |
-| `--canvas` | `#F4F7FA` | App background |
+| `--ink-950` | `#0F172A` | Highest-emphasis text |
+| `--navy-800` | `#1E3A5F` | Institutional identity and deep surfaces |
+| `--cobalt-600` | `#2563EB` | Primary actions and active states |
+| `--teal-700` | `#0F766E` | Retrieval, evidence, and system status |
+| `--orange-600` | `#EA580C` | Warm emphasis and knowledge highlights |
+| `--blue-100` | `#DBEAFE` | Cobalt supporting surface |
+| `--teal-100` | `#CCFBF1` | Status backgrounds |
+| `--orange-100` | `#FFEDD5` | Warm supporting surface |
+| `--canvas` | `#F3F6FB` | App background |
 | `--surface` | `#FFFFFF` | Cards, input, and sidebar |
 | `--surface-muted` | `#EDF2F6` | User messages and quiet controls |
 | `--text` | `#172033` | Body text |
@@ -46,10 +52,12 @@ UniAssist is a trustworthy university-services research assistant. The interface
 ## Components
 
 - App bar: vector brand mark, product name, evidence status, and initials avatar.
-- Knowledge strip: document count, coverage labels, and knowledge freshness.
-- Empty state: concise evidence-led message and four dataset-grounded question starters.
+- Bento hero: asymmetric deep-blue statement card paired with three knowledge metric cards.
+- Insight rail: document count, policy/news composition, coverage labels, and knowledge freshness.
+- Empty state: bento overview followed by four dataset-grounded topic cards.
 - Retrieval sidebar: `top_k` slider plus semantic, BM25, rerank, and fallback status.
 - Assistant response: clear role label, readable answer, then an evidence panel.
+- Topic cards: distinct cobalt, teal, orange, and navy accents with a short content promise.
 - Evidence cards: source title, document type, score, and an optional excerpt.
 - User prompt: right-aligned navy bubble with high-contrast white text.
 
