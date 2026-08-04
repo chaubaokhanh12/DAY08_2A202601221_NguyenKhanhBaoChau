@@ -1,0 +1,79 @@
+# First-year student embraces Barcelona exchange experience from Erasmus+ scholarship - RMIT University
+
+**Source:** https://www.rmit.edu.vn/students/student-news-and-events/student-news/2026/first-year-erasmus-scholarship-barcelona-exchange-experience
+**Crawled:** 2026-08-04T10:01:17.589668
+**Description:** Through the Erasmus Scholarship, Nguyen Thuy Duong traded familiar classrooms for a new student life studying at CETT.
+
+---
+
+# First-year student embraces Barcelona exchange experience from Erasmus+ scholarship
+
+## First-year student embraces Barcelona exchange experience from Erasmus+ scholarship
+
+### What started as a first year at RMIT Vietnam soon turned into an unexpected journey across continents for Nguyen Thuy Duong. Through the Erasmus Scholarship, she traded familiar classrooms for a new student life studying at CETT, a leading higher education school affiliated with the University of Barcelona, Spain.
+
+Like many RMIT students, Nguyen Thuy Duong aspired to go on an exchange after completing her first year. Starting from scratch, she began researching countries and universities, booking a consultation with the[ RMIT Mobility](https://www.rmit.edu.vn/study-at-rmit/global-experiences/contact-us) team to explore her options.
+
+## The journey to an Erasmus+ scholarship
+
+Initially, Duong envisioned herself studying at popular destinations such as Finland, New Zealand, and France, where universities were recognised for strong business programmes. At the time, Spain had never crossed her mind, and she was still searching for a destination that felt like the right academic fit.
+
+That changed when the RMIT Mobility team introduced her to an [Erasmus+ scholarship](https://esn.org/erasmus) opportunity in Barcelona at [CETT](https://www.cett.es/en), a leading institution specialising in Tourism and Hospitality that closely aligned with Duong’s major. Beyond opening the door to a new academic environment, the scholarship also helped ease financial concerns by providing support that may include monthly stipends and travel assistance for eligible students.
+
+“Learning about this scholarship changed my life,” Duong said. However, securing an Erasmus+ scholarship was far from easy. As a highly competitive programme, applicants compete with candidates from around the world, many with exceptionally strong profiles.
+
+Without an exceptionally high GPA, Duong differentiated herself through a clear sense of purpose and sustained commitment to Tourism and Hospitality. She demonstrated why studying in Europe, particularly at CETT Barcelona School of Tourism, Hospitality and Gastronomy, aligned closely with her long-term goals.
+
+What especially attracted Duong to CETT was its specialised environment. Unlike RMIT Vietnam’s multidisciplinary setting, CETT is dedicated entirely to Tourism and Hospitality, offering opportunities to engage with peers who share similar interests while bringing industry perspectives from diverse cultural backgrounds. For Duong, this represented a chance to deepen both her industry knowledge and global understanding of tourism.
+
+Besides, Duong also prepared a detailed resume showcasing her sustained commitment to Tourism and Hospitality, including an internship at Landmark 81, participation as event supporter at European Vietnam - Finland education fairs, and active involvement in[ RMIT’s Tourism and Hospitality club](https://www.rmit.edu.vn/students/campus-life/clubs/saigon-south-campus-clubs/academic-clubs/tourism-and-hospitality-club). Together, these experiences demonstrated both practical exposure and a genuine commitment to the industry, to be granted this scholarship.
+
+## What no one tells you about exchanging
+
+Filled with excitement for the journey ahead, Duong initially saw the Erasmus+ scholarship as the beginning of a dream experience. Yet, arriving in Spain also brought challenges she had never fully anticipated. Unlike popular destinations such as Melbourne, where students often travel with familiar friends or can easily connect with larger Vietnamese communities, Duong found herself adapting to a completely unfamiliar environment on her own.
+
+Duong recalled arriving in Barcelona in January, during the rainy cold winter weeks leading up to the Lunar New Year. Far from home and knowing few people, the experience of spending Tết away from family for the first time became one of the most emotionally challenging parts of her exchange journey.
+
+While her family gathered to [celebrate Tết in Vietnam](https://www.rmit.edu.vn/students/student-news-and-events/student-news/celebrate-tet-vietnamese-lunar-new-year-guide), Duong was learning how to navigate a completely new life abroad on her own. Duong said. “I celebrated Tết with a Hong Kong friend, and we both felt homesick. I think people should really prepare mentally before going on an exchange.”
+
+From handling paperwork and signing rental contracts to opening a bank account, buying a new SIM, and searching for accommodation, even being scammed, and tons of other issues. Yet, looking back, Duong admitted these challenges became an unexpected source of growth.
+
+Another major adjustment for Duong was adapting to a completely different learning environment. “At RMIT, learning is more hybrid, with fewer courses each semester. But here in Barcelona, because of the credit differences, I had to take seven courses instead of three or four,” Duong explained.
+
+Although the credits were considered equivalent, the workload felt significantly more intense. With more assignments, presentations, exams, and longer hours spent on campus, Duong quickly realised that it required strong time management and adaptability. “Within just two weeks, I had to complete seven presentations, seven reports, and seven final exams,” she recalled.
+
+For Duong, the experience challenged the common perception that studying abroad would be more relaxed or flexible. Instead, she found that academic intensity largely depended on the university and programme structure. Without careful planning, balancing coursework alongside travel opportunities could quickly become overwhelming.
+
+## Every experience counts
+
+With support from Erasmus scholarship recipients and university networks, Duong gradually found a sense of belonging in Barcelona, and adapting to new life. Determined not to isolate herself, Duong joined both her university’s International Buddy Programme and the Erasmus Student Network, a city-wide community connecting exchange students across Barcelona. Through these communities, she met friends from diverse cultural backgrounds and quickly built a support system beyond the classroom.
+
+Yet for Thuy Duong, she knew that her time abroad was limited. “When I realised I only had five months here, I wanted to enjoy every moment,” she said. From spontaneous beach picnics and volleyball games to hiking trips and cultural activities, Barcelona’s international student community offered countless opportunities to connect. Weekend trips to nearby cities, including Madrid and even Morocco, also became part of her exploring adventure.
+
+Making the most of every opportunity, Duong embraced travel whenever her academic schedule allowed. Not only the solo trip, during the Easter break, she and a Hong Kong friend also embarked on an ambitious 10-day journey across five countries, travelling from Denmark to Germany, Austria, Hungary, France, and then flying back.
+
+Carousel with three slides shown at a time. Use the Previous and Next buttons to navigate, or the slide dot buttons at the end to jump to slides.
+
+Academically, the experience exceeded Duong’s expectations. Beyond learning from lecturers with industry expertise in Tourism and Hospitality, she found unexpected value in conversations with classmates, many of whom combined study with vocational training or professional experience in the field.
+
+Coming from diverse cultural backgrounds, her peers shared firsthand insights into tourism practices, workplace cultures, and industry realities in countries Duong had never previously considered. “I never imagined I could hear real working experiences from places like Abu Dhabi or Morocco,” she reflected. These exchanges offered Duong more than cultural exposure. As someone considering an international career after graduation, the honest conversations around working conditions, career opportunities, and life abroad helped her better understand which countries and pathways might align with her future goals.
+
+When asked what advice she would give to students considering exchange, Duong admitted she initially questioned whether the experience would be worth it, especially since exchange credits would not contribute to GPA. Looking back, however, she believes the growth that came from navigating challenges independently far outweighed the trade-off. “Everything is a win when the goal is experience. Even if it’s hard, I still think it’s worth it,” Duong said. “You grow a lot when you have to do everything by yourself.”
+
+Duong also encouraged students not to let self-doubt stop them from trying, regardless of GPA. Although uncertain about the outcome, she remained grateful for taking the chance and encouraged others to do the same. “Good or bad experiences are still an experience,” she said. “Just give it a try and see how far you can go”.
+
+Story: Pham Thanh Thao, a Professional Communication student, with Nguyen Thuy Duong’s input. This article does not reflect the views of RMIT Vietnam as an institution.
+
+## More news
+
+### Discover Val’s latest features for study
+
+Val is RMIT’s generative AI tool, designed to support safer and more responsible use of AI for study. The latest features in July 2026 make it easier to bring in files, work with scanned content, and keep better track of your own AI setup.
+
+### What if men had an international day to cry?
+
+What if men had one day a year when crying was not only accepted, but celebrated? That question inspired International Men’s Crying Day, a campaign created by five RMIT Vietnam students that went on to win a D&AD New Blood Yellow Pencil – one of the world’s most respected awards for emerging creatives.
+
+### Your voice matters: Help shape your RMIT experience with SES
+
+What could make your RMIT experience better? From learning and campus facilities to student services, support, amenities and student life, your feedback can help RMIT understand what students need and where improvements can be made.
