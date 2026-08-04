@@ -42,3 +42,27 @@ def test_sources_have_a_dedicated_renderer():
     assert "def render_sources(" in APP_SOURCE
     assert "source-card" in APP_SOURCE
     assert "metadata" in APP_SOURCE
+
+
+def test_popular_questions_match_the_standardized_knowledge_base():
+    assert "Census Date" in APP_SOURCE
+    assert "scholarship recipients maintain" in APP_SOURCE
+    assert "signing a rental contract in Ho Chi Minh City" in APP_SOURCE
+    assert "book a study room through the RMIT Library" in APP_SOURCE
+
+
+def test_academic_copilot_redesign_has_accessible_structure():
+    assert "academic-copilot-shell" in APP_SOURCE
+    assert "knowledge-strip" in APP_SOURCE
+    assert "evidence-panel" in APP_SOURCE
+    assert ":focus-visible" in APP_SOURCE
+    assert "prefers-reduced-motion: reduce" in APP_SOURCE
+    assert "min-height: 44px" in APP_SOURCE
+    assert "@import url" not in APP_SOURCE
+
+
+def test_structural_icons_are_vectors_instead_of_emoji():
+    assert "<svg" in APP_SOURCE
+    assert "🎓" not in APP_SOURCE
+    assert "⚠️" not in APP_SOURCE
+    assert "❌" not in APP_SOURCE

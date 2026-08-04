@@ -1,4 +1,4 @@
-"""UniAssist AI — Streamlit interface for the University Services RAG app."""
+"""UniAssist AI — evidence-led Streamlit interface for University Services RAG."""
 
 import html
 import sys
@@ -11,11 +11,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PROJECT_ROOT = Path(__file__).parent
+STANDARDIZED_DIR = PROJECT_ROOT / "data" / "standardized"
+DOCUMENT_COUNT = len(list(STANDARDIZED_DIR.rglob("*.md")))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 st.set_page_config(
     page_title="UniAssist AI",
-    page_icon="🎓",
+    page_icon="U",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -31,33 +33,42 @@ if "top_k" not in st.session_state:
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
     :root {
-        --surface: #f9f9f9;
-        --surface-lowest: #ffffff;
-        --surface-low: #f3f3f4;
-        --surface-high: #e8e8e8;
-        --primary: #002b5a;
-        --primary-container: #004182;
-        --primary-fixed: #d6e3ff;
-        --secondary: #006a65;
-        --text: #1a1c1c;
-        --muted: #424750;
-        --border: #e2e2e2;
-        --error: #ba1a1a;
+        --navy-950: #001b3a;
+        --navy-800: #002b5a;
+        --navy-700: #0b4778;
+        --teal-700: #006a65;
+        --teal-100: #d9f2ef;
+        --canvas: #f4f7fa;
+        --surface: #ffffff;
+        --surface-muted: #edf2f6;
+        --text: #172033;
+        --text-muted: #526173;
+        --border: #d9e2ec;
+        --danger: #b42318;
+        --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.04);
+        --shadow-md: 0 12px 32px rgba(16, 24, 40, 0.09);
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
     }
 
-    html, body, [class*="css"] {
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    html,
+    body,
+    [class*="css"] {
         color: var(--text);
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    html, body, [data-testid="stAppViewContainer"], .stApp {
-        background: var(--surface);
+    html,
+    body,
+    [data-testid="stAppViewContainer"],
+    .stApp {
+        background: var(--canvas);
     }
 
-    #MainMenu, footer {
+    #MainMenu,
+    footer {
         display: none !important;
     }
 
@@ -66,22 +77,160 @@ st.markdown(
         background: transparent;
     }
 
+    [data-testid="stAppViewContainer"] > .main {
+        padding-top: 0;
+    }
+
+    .block-container {
+        max-width: 800px;
+        padding-top: 6.75rem;
+        padding-bottom: 10rem;
+    }
+
+    .academic-copilot-shell {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 999;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(217, 226, 236, 0.92);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 1px 12px rgba(16, 24, 40, 0.04);
+        backdrop-filter: blur(14px);
+    }
+
+    .appbar-inner {
+        width: min(100% - 48px, 1360px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .brand-lockup,
+    .appbar-meta,
+    .brand-copy,
+    .verified-state,
+    .knowledge-item,
+    .assistant-label,
+    .evidence-title,
+    .pipeline-step {
+        display: flex;
+        align-items: center;
+    }
+
+    .brand-lockup {
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .brand-mark {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        display: grid;
+        place-items: center;
+        color: white;
+        border-radius: 12px;
+        background: var(--navy-800);
+        box-shadow: 0 6px 16px rgba(0, 43, 90, 0.18);
+    }
+
+    .brand-mark svg,
+    .inline-icon,
+    .status-icon {
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.8;
+    }
+
+    .brand-mark svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .brand-copy {
+        min-width: 0;
+        align-items: baseline;
+        gap: 10px;
+    }
+
+    .brand-title {
+        color: var(--navy-950);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+    }
+
+    .brand-context {
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .appbar-meta {
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+    .verified-state {
+        gap: 8px;
+        min-height: 36px;
+        padding: 0 12px;
+        color: var(--teal-700);
+        border: 1px solid #b8ded9;
+        border-radius: 999px;
+        background: #f2fbfa;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--teal-700);
+        box-shadow: 0 0 0 3px rgba(0, 106, 101, 0.11);
+    }
+
+    .profile-avatar {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        color: var(--navy-800);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface-muted);
+        font-size: 12px;
+        font-weight: 750;
+    }
+
     [data-testid="collapsedControl"] {
-        top: 72px;
+        top: 82px;
         left: 12px;
         z-index: 1001;
+        width: 44px;
+        height: 44px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: var(--surface-lowest);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
     }
 
     [data-testid="stSidebar"] {
-        top: 64px;
-        height: calc(100vh - 64px);
+        top: 72px;
+        height: calc(100vh - 72px);
         border-right: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 8px 0 30px rgba(0, 43, 90, 0.045);
+        background: var(--surface);
+        box-shadow: 8px 0 30px rgba(16, 24, 40, 0.04);
     }
 
     [data-testid="stSidebar"] > div:first-child {
@@ -89,396 +238,503 @@ st.markdown(
     }
 
     .sidebar-retrieval {
-        margin: 0.25rem 0 1.2rem;
-        padding: 0.95rem 1rem;
-        border: 1px solid rgba(0, 106, 101, 0.16);
-        border-radius: 16px;
-        background: linear-gradient(145deg, rgba(214, 227, 255, 0.58), rgba(111, 247, 238, 0.13));
+        margin-bottom: 20px;
+        padding: 16px;
+        border: 1px solid #c8e4e1;
+        border-radius: var(--radius-md);
+        background: linear-gradient(145deg, #f8fcfc, #edf8f7);
     }
 
     .sidebar-kicker {
-        margin-bottom: 5px;
-        color: var(--secondary);
+        margin-bottom: 6px;
+        color: var(--teal-700);
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 750;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
 
+    .sidebar-title-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--navy-950);
+    }
+
+    .sidebar-title-row svg {
+        width: 20px;
+        height: 20px;
+    }
+
     .sidebar-retrieval h2 {
         margin: 0;
-        color: var(--primary);
-        font-size: 20px;
+        font-size: 19px;
         line-height: 1.3;
         letter-spacing: -0.02em;
     }
 
     .sidebar-retrieval p {
-        margin: 8px 0 0;
-        color: var(--muted);
+        margin: 9px 0 0;
+        color: var(--text-muted);
         font-size: 12px;
         line-height: 1.55;
     }
 
+    [data-testid="stSidebar"] [data-testid="stSlider"] {
+        padding: 8px 2px 4px;
+    }
+
+    [data-testid="stSlider"] [role="slider"] {
+        background: var(--teal-700);
+    }
+
     .pipeline-steps {
-        margin-top: 1.2rem;
-        padding-top: 1rem;
+        margin-top: 20px;
+        padding-top: 18px;
         border-top: 1px solid var(--border);
     }
 
     .pipeline-step {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin: 9px 0;
-        color: var(--muted);
+        position: relative;
+        gap: 10px;
+        min-height: 36px;
+        color: var(--text-muted);
         font-size: 12px;
+        font-weight: 550;
     }
 
-    .pipeline-dot {
-        width: 8px;
-        height: 8px;
-        flex: 0 0 8px;
-        border-radius: 999px;
-        background: var(--secondary);
-        box-shadow: 0 0 0 4px rgba(0, 106, 101, 0.09);
-    }
-
-    [data-testid="stAppViewContainer"] > .main {
-        padding-top: 0;
-    }
-
-    .block-container {
-        max-width: 800px;
-        padding-top: 6rem;
-        padding-bottom: 10rem;
-    }
-
-    .uniassist-header {
-        position: fixed;
-        inset: 0 0 auto 0;
-        z-index: 999;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.92);
-        border-bottom: 1px solid rgba(226, 226, 226, 0.72);
-        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
-        backdrop-filter: blur(14px);
-    }
-
-    .uniassist-header-inner {
-        width: min(100% - 48px, 1248px);
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-    }
-
-    .uniassist-brand {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        color: var(--primary);
-        font-size: 20px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-
-    .uniassist-logo {
-        width: 34px;
-        height: 34px;
+    .pipeline-number {
+        width: 24px;
+        height: 24px;
         display: grid;
         place-items: center;
-        color: white;
-        font-size: 18px;
-        border-radius: 10px;
-        background: linear-gradient(145deg, var(--primary-container), var(--primary));
-        box-shadow: 0 6px 16px rgba(0, 43, 90, 0.18);
+        flex: 0 0 24px;
+        color: var(--teal-700);
+        border: 1px solid #b8ded9;
+        border-radius: 8px;
+        background: #f2fbfa;
+        font-size: 10px;
+        font-weight: 750;
     }
 
-    .uniassist-nav {
-        color: var(--primary);
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .uniassist-tools {
-        justify-self: end;
+    .knowledge-strip {
+        margin-bottom: 34px;
+        padding: 12px 14px;
         display: flex;
         align-items: center;
-        gap: 14px;
-        color: var(--muted);
-    }
-
-    .theme-icon {
-        width: 34px;
-        height: 34px;
-        display: grid;
-        place-items: center;
-        border-radius: 999px;
-        font-size: 17px;
-    }
-
-    .profile-avatar {
-        width: 34px;
-        height: 34px;
-        display: grid;
-        place-items: center;
+        justify-content: space-between;
+        gap: 16px;
         border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .knowledge-items {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+    }
+
+    .knowledge-item {
+        gap: 7px;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .knowledge-item svg {
+        width: 15px;
+        height: 15px;
+        color: var(--teal-700);
+    }
+
+    .knowledge-badge {
+        padding: 5px 9px;
+        color: var(--navy-800);
         border-radius: 999px;
-        color: var(--primary);
-        background: var(--primary-fixed);
-        font-size: 13px;
+        background: var(--surface-muted);
+        font-size: 10px;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .uniassist-welcome {
-        margin: min(14vh, 120px) auto 44px;
+        margin: min(8vh, 72px) auto 34px;
         text-align: center;
-        animation: welcome-in 0.5s ease-out;
+        animation: content-in 220ms ease-out;
     }
 
-    .welcome-mark {
-        width: 56px;
-        height: 56px;
-        margin: 0 auto 20px;
+    .welcome-symbol {
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 18px;
         display: grid;
         place-items: center;
-        color: var(--primary);
-        background: var(--primary-fixed);
-        border-radius: 18px;
-        font-size: 26px;
-        box-shadow: 0 8px 28px rgba(0, 43, 90, 0.10);
+        color: var(--teal-700);
+        border: 1px solid #b8ded9;
+        border-radius: 16px;
+        background: #f2fbfa;
+    }
+
+    .welcome-symbol svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .welcome-eyebrow {
+        margin-bottom: 8px;
+        color: var(--teal-700);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
     }
 
     .uniassist-welcome h1 {
-        margin: 0 0 10px;
-        color: var(--primary);
-        font-size: clamp(28px, 4vw, 38px);
-        line-height: 1.2;
-        letter-spacing: -0.035em;
+        max-width: 660px;
+        margin: 0 auto 12px;
+        color: var(--navy-950);
+        font-size: clamp(30px, 5vw, 42px);
+        line-height: 1.14;
+        letter-spacing: -0.045em;
     }
 
     .uniassist-welcome p {
-        max-width: 580px;
+        max-width: 590px;
         margin: 0 auto;
-        color: var(--muted);
-        font-size: 16px;
+        color: var(--text-muted);
+        font-size: 15px;
         line-height: 1.65;
     }
 
-    @keyframes welcome-in {
-        from { opacity: 0; transform: translateY(8px); }
+    .trust-line {
+        margin-top: 18px;
+        color: var(--navy-700);
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    @keyframes content-in {
+        from { opacity: 0; transform: translateY(5px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    [data-testid="stExpander"] {
-        margin-bottom: 1.25rem;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.74);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.025);
-    }
-
-    [data-testid="stExpander"] summary {
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    [data-testid="stSlider"] [role="slider"] {
-        background: var(--primary-container);
-    }
-
     [data-testid="stChatMessage"] {
-        margin-bottom: 1.3rem;
+        margin-bottom: 22px;
         padding: 0;
         background: transparent;
-    }
-
-    [data-testid="stChatMessage"] [data-testid="stChatMessageAvatarUser"] {
-        display: none;
     }
 
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
         width: fit-content;
         max-width: 78%;
         margin-left: auto;
-        padding: 0.85rem 1.15rem;
-        border: 1px solid rgba(195, 198, 210, 0.55);
-        border-radius: 18px 5px 18px 18px;
-        background: var(--surface-low);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.035);
+        padding: 13px 17px;
+        color: white;
+        border-radius: 18px 6px 18px 18px;
+        background: var(--navy-800);
+        box-shadow: 0 8px 20px rgba(0, 43, 90, 0.14);
+    }
+
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"],
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) p {
+        color: white;
+    }
+
+    [data-testid="stChatMessageAvatarUser"] {
+        display: none;
     }
 
     [data-testid="stChatMessageAvatarAssistant"] {
-        color: var(--primary) !important;
-        background: var(--primary-fixed) !important;
-        border: 1px solid rgba(169, 199, 255, 0.55);
+        color: var(--navy-800) !important;
+        border: 1px solid var(--border);
+        background: var(--surface) !important;
+        box-shadow: var(--shadow-sm);
     }
 
     [data-testid="stChatMessageContent"] {
         color: var(--text);
         font-size: 16px;
-        line-height: 1.7;
+        line-height: 1.66;
     }
 
     [data-testid="stChatMessageContent"] p {
-        margin-bottom: 0.75rem;
+        margin-bottom: 12px;
     }
 
-    .ai-status {
+    .assistant-card {
+        margin: 0 0 10px;
+    }
+
+    .assistant-label {
+        gap: 8px;
+        color: var(--navy-800);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .assistant-label svg {
+        width: 15px;
+        height: 15px;
+        color: var(--teal-700);
+    }
+
+    .search-state {
         width: fit-content;
         margin: 0 0 12px;
-        padding: 6px 10px;
-        color: var(--secondary);
-        background: rgba(111, 247, 238, 0.22);
+        padding: 7px 11px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--teal-700);
+        border: 1px solid #c8e4e1;
         border-radius: 999px;
-        font-size: 12px;
-        font-weight: 600;
+        background: #f2fbfa;
+        font-size: 11px;
+        font-weight: 700;
     }
 
-    .sources-heading {
-        margin: 22px 0 10px;
-        padding-top: 16px;
+    .search-state svg {
+        width: 14px;
+        height: 14px;
+        animation: status-pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 1; }
+    }
+
+    .evidence-panel {
+        margin-top: 24px;
+        padding-top: 18px;
         border-top: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.01em;
+    }
+
+    .evidence-title {
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 11px;
+    }
+
+    .evidence-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--navy-950);
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .evidence-heading svg {
+        width: 16px;
+        height: 16px;
+        color: var(--teal-700);
+    }
+
+    .evidence-count {
+        color: var(--text-muted);
+        font-size: 10px;
+        font-weight: 600;
     }
 
     .source-card {
-        position: relative;
-        margin: 0 0 8px;
-        padding: 12px 14px 12px 16px;
-        overflow: hidden;
+        margin-bottom: 9px;
+        padding: 13px 14px;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 11px;
         border: 1px solid var(--border);
-        border-left: 4px solid var(--primary);
-        border-radius: 14px;
-        background: var(--surface-lowest);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+        border-radius: 13px;
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
     }
 
-    .source-card:nth-of-type(even) {
-        border-left-color: var(--secondary);
+    .source-index {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        color: var(--teal-700);
+        border: 1px solid #b8ded9;
+        border-radius: 9px;
+        background: #f2fbfa;
+        font-size: 10px;
+        font-weight: 800;
     }
 
-    .source-card strong,
-    .source-card span {
+    .source-copy strong,
+    .source-copy span {
         display: block;
     }
 
-    .source-card strong {
-        padding-right: 10px;
+    .source-copy strong {
+        overflow: hidden;
         color: var(--text);
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .source-card span {
+    .source-copy span {
         margin-top: 3px;
-        color: var(--muted);
-        font-size: 11px;
-    }
-
-    .assistant-actions {
-        display: flex;
-        gap: 6px;
-        margin-top: 10px;
-        color: #737781;
-        font-size: 15px;
-        letter-spacing: 8px;
-        user-select: none;
-    }
-
-    .suggestion-label {
-        margin: 24px 0 9px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    [data-testid="stButton"] button {
-        min-height: 40px;
-        border: 1px solid transparent;
-        border-radius: 999px;
-        color: var(--text);
-        background: var(--surface-low);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.035);
-        font-size: 12px;
-        font-weight: 500;
-        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
-    }
-
-    [data-testid="stButton"] button:hover {
-        border-color: rgba(0, 106, 101, 0.28);
-        color: var(--primary);
-        background: #edf6f5;
-        transform: translateY(-1px);
-    }
-
-    [data-testid="stChatInput"] {
-        border: 1px solid var(--border);
-        border-radius: 17px;
-        background: var(--surface-lowest);
-        box-shadow: 0 6px 30px rgba(0, 43, 90, 0.09);
-    }
-
-    [data-testid="stChatInput"]:focus-within {
-        border-color: rgba(0, 106, 101, 0.55);
-        box-shadow: 0 7px 32px rgba(0, 106, 101, 0.11);
-    }
-
-    [data-testid="stChatInput"] button {
-        color: white;
-        border-radius: 11px;
-        background: var(--primary);
-    }
-
-    [data-testid="stBottom"] {
-        background: linear-gradient(to top, var(--surface) 70%, rgba(249, 249, 249, 0));
-    }
-
-    .uniassist-disclaimer {
-        margin: 8px 0 0;
-        color: #737781;
-        text-align: center;
+        color: var(--text-muted);
         font-size: 10px;
     }
 
-    @media (max-width: 640px) {
+    [data-testid="stExpander"] {
+        margin-top: -3px;
+        margin-bottom: 9px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    [data-testid="stExpander"] summary {
+        min-height: 44px;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+    .suggestion-label {
+        margin: 26px 0 10px;
+        color: var(--navy-950);
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .suggestion-help {
+        margin: -5px 0 13px;
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    [data-testid="stButton"] button {
+        min-height: 44px;
+        padding: 8px 13px;
+        color: var(--navy-800);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+        font-size: 11px;
+        font-weight: 650;
+        transition: color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    [data-testid="stButton"] button:hover {
+        color: var(--teal-700);
+        border-color: #9bcfc9;
+        background: #f8fcfc;
+        box-shadow: 0 5px 16px rgba(0, 106, 101, 0.08);
+    }
+
+    [data-testid="stButton"] button:active {
+        background: #edf8f7;
+        box-shadow: none;
+    }
+
+    button:focus-visible,
+    [role="slider"]:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible {
+        outline: 3px solid var(--teal-700) !important;
+        outline-offset: 2px !important;
+    }
+
+    [data-testid="stChatInput"] {
+        min-height: 58px;
+        border: 1px solid #c6d3df;
+        border-radius: 17px;
+        background: var(--surface);
+        box-shadow: var(--shadow-md);
+    }
+
+    [data-testid="stChatInput"]:focus-within {
+        border-color: var(--teal-700);
+        box-shadow: 0 0 0 3px rgba(0, 106, 101, 0.11), var(--shadow-md);
+    }
+
+    [data-testid="stChatInput"] button {
+        width: 44px;
+        height: 44px;
+        color: white;
+        border-radius: 12px;
+        background: var(--navy-800);
+    }
+
+    [data-testid="stChatInput"] button:hover {
+        background: var(--navy-700);
+    }
+
+    [data-testid="stBottom"] {
+        background: linear-gradient(to top, var(--canvas) 74%, rgba(244, 247, 250, 0));
+    }
+
+    .uniassist-disclaimer {
+        margin-top: 9px;
+        color: var(--text-muted);
+        text-align: center;
+        font-size: 10px;
+        line-height: 1.45;
+    }
+
+    @media (max-width: 720px) {
         .block-container {
-            padding: 5.25rem 1rem 9rem;
+            padding: 6rem 1rem 9rem;
         }
 
-        .uniassist-header-inner {
+        .appbar-inner {
             width: calc(100% - 30px);
-            grid-template-columns: 1fr auto;
         }
 
-        .uniassist-nav,
-        .theme-icon,
-        .uniassist-profile-label {
+        .brand-context,
+        .verified-copy {
             display: none;
-        }
-
-        .uniassist-welcome {
-            margin-top: 8vh;
         }
 
         [data-testid="stSidebar"] {
             width: min(86vw, 320px) !important;
         }
 
+        .knowledge-strip,
+        .evidence-title {
+            align-items: flex-start;
+        }
+
+        .knowledge-strip {
+            flex-direction: column;
+        }
+
+        .uniassist-welcome {
+            margin-top: 5vh;
+        }
+
         [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-            max-width: 88%;
+            max-width: 90%;
         }
 
         [data-testid="column"] {
-            min-width: max-content !important;
+            min-width: min(100%, 160px) !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
         }
     }
     </style>
@@ -489,19 +745,29 @@ st.markdown(
 
 st.markdown(
     """
-    <div class="uniassist-header">
-        <div class="uniassist-header-inner">
-            <div class="uniassist-brand">
-                <span class="uniassist-logo">U</span>
-                <span>UniAssist AI</span>
+    <header class="academic-copilot-shell">
+        <div class="appbar-inner">
+            <div class="brand-lockup">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 5.5h5.5A2.5 2.5 0 0 1 12 8v11a3 3 0 0 0-3-3H4z"></path>
+                        <path d="M20 5.5h-5.5A2.5 2.5 0 0 0 12 8v11a3 3 0 0 1 3-3h5z"></path>
+                    </svg>
+                </div>
+                <div class="brand-copy">
+                    <span class="brand-title">UniAssist AI</span>
+                    <span class="brand-context">Academic Research Copilot</span>
+                </div>
             </div>
-            <div class="uniassist-nav">Home</div>
-            <div class="uniassist-tools">
-                <span class="theme-icon" aria-label="Theme">☾</span>
-                <span class="profile-avatar" aria-label="Profile">UA</span>
+            <div class="appbar-meta">
+                <div class="verified-state">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    <span class="verified-copy">Evidence mode active</span>
+                </div>
+                <div class="profile-avatar" aria-label="UniAssist profile">UA</div>
             </div>
         </div>
-    </div>
+    </header>
     """,
     unsafe_allow_html=True,
 )
@@ -512,8 +778,16 @@ with st.sidebar:
         """
         <section class="sidebar-retrieval">
             <div class="sidebar-kicker">Knowledge controls</div>
-            <h2>Retrieval Settings</h2>
-            <p>Control how much evidence UniAssist collects before composing an answer.</p>
+            <div class="sidebar-title-row">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 7h16M7 12h10M10 17h4"></path>
+                    <circle cx="8" cy="7" r="2"></circle>
+                    <circle cx="15" cy="12" r="2"></circle>
+                    <circle cx="12" cy="17" r="2"></circle>
+                </svg>
+                <h2>Retrieval settings</h2>
+            </div>
+            <p>Choose how much evidence UniAssist reviews before composing an answer.</p>
         </section>
         """,
         unsafe_allow_html=True,
@@ -523,32 +797,69 @@ with st.sidebar:
         min_value=3,
         max_value=10,
         key="top_k",
-        help="Choose how many knowledge-base chunks are sent to the answer generator.",
+        help="Number of knowledge-base chunks sent to the answer generator.",
     )
-    st.caption(f"Using the top **{top_k}** knowledge chunks")
+    st.caption(f"Reviewing up to **{top_k}** knowledge chunks per question.")
     st.markdown(
         """
         <div class="pipeline-steps">
             <div class="sidebar-kicker">Retrieval flow</div>
-            <div class="pipeline-step"><span class="pipeline-dot"></span>Semantic + BM25 search</div>
-            <div class="pipeline-step"><span class="pipeline-dot"></span>RRF reranking</div>
-            <div class="pipeline-step"><span class="pipeline-dot"></span>PageIndex fallback</div>
-            <div class="pipeline-step"><span class="pipeline-dot"></span>Citation-aware answer</div>
+            <div class="pipeline-step"><span class="pipeline-number">01</span>Semantic search</div>
+            <div class="pipeline-step"><span class="pipeline-number">02</span>BM25 keyword search</div>
+            <div class="pipeline-step"><span class="pipeline-number">03</span>RRF reranking</div>
+            <div class="pipeline-step"><span class="pipeline-number">04</span>PageIndex fallback</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
 
+st.markdown(
+    f"""
+    <section class="knowledge-strip" aria-label="Knowledge base status">
+        <div class="knowledge-items">
+            <span class="knowledge-item">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path>
+                </svg>
+                {DOCUMENT_COUNT} standardized documents
+            </span>
+            <span class="knowledge-item">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-5"></path>
+                </svg>
+                RMIT policies and services
+            </span>
+        </div>
+        <span class="knowledge-badge">Coverage: 2025–2026</span>
+    </section>
+    """,
+    unsafe_allow_html=True,
+)
+
+
 def render_sources(sources: list[dict]) -> None:
-    """Render retrieved chunks as compact, safely escaped source cards."""
+    """Render retrieved chunks as safely escaped evidence cards."""
     if not sources:
         return
 
     st.markdown(
-        '<div class="sources-heading">▤ &nbsp; Sources</div>',
+        f"""
+        <div class="evidence-panel">
+            <div class="evidence-title">
+                <span class="evidence-heading">
+                    <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h8M8 17h5"></path>
+                    </svg>
+                    Evidence used
+                </span>
+                <span class="evidence-count">{len(sources)} retrieved chunks</span>
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
+
     for index, source in enumerate(sources, start=1):
         metadata = source.get("metadata") or {}
         source_name = str(
@@ -562,42 +873,66 @@ def render_sources(sources: list[dict]) -> None:
 
         st.markdown(
             '<div class="source-card">'
-            f"<strong>{index}. {html.escape(source_name)}</strong>"
-            f"<span>{html.escape(document_type)} &nbsp;·&nbsp; score {score:.4f}</span>"
-            "</div>",
+            f'<span class="source-index">{index:02d}</span>'
+            '<span class="source-copy">'
+            f"<strong>{html.escape(source_name)}</strong>"
+            f"<span>{html.escape(document_type)} &nbsp;·&nbsp; relevance {score:.4f}</span>"
+            "</span></div>",
             unsafe_allow_html=True,
         )
 
         excerpt = str(source.get("content") or "")[:500]
         if excerpt:
-            with st.expander(f"View excerpt {index}"):
+            with st.expander(f"Read evidence excerpt {index}"):
                 st.text(excerpt)
 
 
+def render_assistant_label() -> None:
+    """Render the consistent assistant identity above an answer."""
+    st.markdown(
+        """
+        <div class="assistant-card">
+            <div class="assistant-label">
+                <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path>
+                    <path d="M8 14a4 4 0 1 1 8 0c0 1.7-1 2.5-2 3.5V20h-4v-2.5C9 16.5 8 15.7 8 14z"></path>
+                </svg>
+                UniAssist response
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def render_message(message: dict) -> None:
-    """Render one persisted chat message and its optional sources."""
+    """Render one persisted chat message and its optional evidence."""
     role = message.get("role", "assistant")
-    avatar = "🎓" if role == "assistant" else None
-    with st.chat_message(role, avatar=avatar):
+    with st.chat_message(role):
+        if role == "assistant":
+            render_assistant_label()
         st.markdown(str(message.get("content", "")))
         if role == "assistant":
             render_sources(message.get("sources") or [])
-            st.markdown(
-                '<div class="assistant-actions" title="Response actions">⧉ ↻ ♡</div>',
-                unsafe_allow_html=True,
-            )
 
 
 if not st.session_state.messages:
     st.markdown(
         """
         <section class="uniassist-welcome">
-            <div class="welcome-mark">✦</div>
-            <h1>How can I help today?</h1>
+            <div class="welcome-symbol" aria-hidden="true">
+                <svg class="inline-icon" viewBox="0 0 24 24">
+                    <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path>
+                    <path d="M8 14a4 4 0 1 1 8 0c0 1.7-1 2.5-2 3.5V20h-4v-2.5C9 16.5 8 15.7 8 14z"></path>
+                </svg>
+            </div>
+            <div class="welcome-eyebrow">RMIT University Services</div>
+            <h1>Reliable answers, grounded in university sources.</h1>
             <p>
-                Ask UniAssist about course registration, tuition, scholarships,
-                library services, accommodation, and student support at RMIT Vietnam.
+                Ask about tuition, scholarships, accommodation, library services,
+                and student wellbeing. UniAssist finds evidence before it answers.
             </p>
+            <div class="trust-line">Answers include the documents used whenever evidence is available.</div>
         </section>
         """,
         unsafe_allow_html=True,
@@ -609,31 +944,48 @@ for persisted_message in st.session_state.messages:
 
 
 st.markdown(
-    '<div class="suggestion-label">Popular questions</div>',
+    """
+    <div class="suggestion-label">Start with a verified topic</div>
+    <div class="suggestion-help">These questions match the documents currently in the knowledge base.</div>
+    """,
     unsafe_allow_html=True,
 )
 
 suggestions = [
-    ("Course registration", "What are the key dates for course registration?"),
-    ("Tuition deadline", "When is the tuition payment deadline?"),
-    ("Library booking", "How can I book a group study room in the library?"),
-    ("IT Support desk", "How can I contact the IT Support desk?"),
+    (
+        "Tuition and Census Date",
+        "What is the Census Date, and how does it affect my tuition fee liability?",
+    ),
+    (
+        "Scholarship requirements",
+        "What GPA and study load must RMIT scholarship recipients maintain?",
+    ),
+    (
+        "Housing checklist",
+        "What should international students check before signing a rental contract in Ho Chi Minh City?",
+    ),
+    (
+        "Library study rooms",
+        "How can I book a study room through the RMIT Library?",
+    ),
 ]
 
-suggestion_columns = st.columns(len(suggestions))
-for column, (label, question) in zip(suggestion_columns, suggestions):
-    with column:
-        if st.button(label, key=f"suggestion_{label}", use_container_width=True):
+suggestion_columns = st.columns(2)
+for index, (label, question) in enumerate(suggestions):
+    with suggestion_columns[index % 2]:
+        if st.button(label, key=f"suggestion_{index}", use_container_width=True):
             st.session_state.pending_query = question
 
 
-user_input = st.chat_input("Ask anything about your university...")
+user_input = st.chat_input("Ask a question about RMIT services and policies")
 query = user_input or st.session_state.pending_query
 
 st.markdown(
-    '<div class="uniassist-disclaimer">'
-    "UniAssist AI can make mistakes. Check important institutional info."
-    "</div>",
+    """
+    <div class="uniassist-disclaimer">
+        UniAssist may make mistakes. Verify high-impact decisions against official university information.
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -644,12 +996,20 @@ if query:
     st.session_state.messages.append(user_message)
     render_message(user_message)
 
-    with st.chat_message("assistant", avatar="🎓"):
+    with st.chat_message("assistant"):
+        render_assistant_label()
         st.markdown(
-            '<div class="ai-status">✦ &nbsp; Searching the knowledge base</div>',
+            """
+            <div class="search-state">
+                <svg class="status-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path>
+                </svg>
+                Searching the university knowledge base
+            </div>
+            """,
             unsafe_allow_html=True,
         )
-        with st.spinner("Reviewing university sources and preparing an answer..."):
+        with st.spinner("Reviewing retrieved evidence and preparing an answer..."):
             try:
                 from src.task10_generation import generate_with_citation
 
@@ -658,20 +1018,16 @@ if query:
                 sources = response.get("sources", [])
             except NotImplementedError:
                 answer = (
-                    "⚠️ **Task 10 has not been implemented.** Complete "
+                    "**Generation is not connected yet.** Complete "
                     "`src/task10_generation.py` to connect the RAG pipeline to this interface."
                 )
                 sources = []
             except Exception as error:
-                answer = f"❌ **The RAG pipeline could not complete this request:** {error}"
+                answer = f"**The RAG pipeline could not complete this request.** {error}"
                 sources = []
 
         st.markdown(answer)
         render_sources(sources)
-        st.markdown(
-            '<div class="assistant-actions" title="Response actions">⧉ ↻ ♡</div>',
-            unsafe_allow_html=True,
-        )
 
     st.session_state.messages.append(
         {"role": "assistant", "content": answer, "sources": sources}
